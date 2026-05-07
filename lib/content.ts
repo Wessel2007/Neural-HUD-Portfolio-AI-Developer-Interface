@@ -39,17 +39,6 @@ export interface ContactLink {
 
 const EN_PROJECTS: ProjectContent[] = [
   {
-    title: "Gate Vision",
-    category: "Computer Vision / IoT",
-    problem:
-      "Condominiums and parking facilities need automated, reliable vehicle access control without manual operator intervention at every entry.",
-    solution:
-      "Built a full-stack platform combining a YOLO + EasyOCR backend for Mercosul plate detection, a FastAPI service that controls an Arduino gate actuator, and a React admin dashboard backed by Supabase for resident management and access logs.",
-    technologies: ["Python", "YOLO", "EasyOCR", "FastAPI", "React", "Supabase", "Arduino"],
-    github: "https://github.com/Wessel2007/Gate-Vision",
-    signal: "End-to-end CV pipeline from image capture to hardware gate actuation",
-  },
-  {
     title: "Vehicle Plate Detection",
     category: "Computer Vision",
     problem:
@@ -118,17 +107,6 @@ const EN_PROJECTS: ProjectContent[] = [
 ];
 
 const PT_PROJECTS: ProjectContent[] = [
-  {
-    title: "Gate Vision",
-    category: "Visão Computacional / IoT",
-    problem:
-      "Condomínios e estacionamentos precisam de controle de acesso veicular automatizado e confiável, sem intervenção manual a cada entrada.",
-    solution:
-      "Construí uma plataforma completa combinando backend YOLO + EasyOCR para detecção de placas Mercosul, serviço FastAPI que controla cancela via Arduino, e dashboard administrativo em React com Supabase para gestão de moradores e histórico de acessos.",
-    technologies: ["Python", "YOLO", "EasyOCR", "FastAPI", "React", "Supabase", "Arduino"],
-    github: "https://github.com/Wessel2007/Gate-Vision",
-    signal: "Pipeline de visão computacional ponta a ponta: da câmera à abertura da cancela",
-  },
   {
     title: "Detecção de Placas Veiculares",
     category: "Visão Computacional",
