@@ -1,7 +1,8 @@
 "use client";
 
-import { motion, AnimatePresence, useInView } from "framer-motion";
+import { motion, AnimatePresence, useInView, useScroll, useSpring } from "framer-motion";
 import { useRef, useState, useEffect } from "react";
+import Image from "next/image";
 import { useLang } from "@/lib/language-context";
 import { content, type ProjectContent, type SkillContent } from "@/lib/content";
 
@@ -22,6 +23,74 @@ const staggerContainer = {
   hidden: {},
   visible: { transition: { staggerChildren: 0.13 } },
 };
+
+// ─── Technology Badge Colors ───────────────────────────────────────────────────
+
+const TECH_COLORS: Record<string, { bg: string; border: string; text: string }> = {
+  Python:          { bg: "rgba(255,212,0,0.08)",    border: "rgba(255,212,0,0.35)",    text: "#FFD44D" },
+  YOLO:            { bg: "rgba(239,68,68,0.08)",    border: "rgba(239,68,68,0.35)",    text: "#F87171" },
+  YOLOv11:         { bg: "rgba(239,68,68,0.08)",    border: "rgba(239,68,68,0.35)",    text: "#F87171" },
+  EasyOCR:         { bg: "rgba(168,85,247,0.08)",   border: "rgba(168,85,247,0.35)",   text: "#C084FC" },
+  FastAPI:         { bg: "rgba(5,150,105,0.08)",    border: "rgba(5,150,105,0.35)",    text: "#34D399" },
+  React:           { bg: "rgba(56,189,248,0.08)",   border: "rgba(56,189,248,0.35)",   text: "#38BDF8" },
+  Supabase:        { bg: "rgba(52,211,153,0.08)",   border: "rgba(52,211,153,0.35)",   text: "#34D399" },
+  Arduino:         { bg: "rgba(0,151,167,0.08)",    border: "rgba(0,151,167,0.35)",    text: "#00BCD4" },
+  OpenCV:          { bg: "rgba(71,85,105,0.12)",    border: "rgba(100,116,139,0.40)",  text: "#94A3B8" },
+  PyTorch:         { bg: "rgba(238,76,44,0.08)",    border: "rgba(238,76,44,0.35)",    text: "#F97316" },
+  NumPy:           { bg: "rgba(77,128,196,0.08)",   border: "rgba(77,128,196,0.35)",   text: "#60A5FA" },
+  CCXT:            { bg: "rgba(234,179,8,0.08)",    border: "rgba(234,179,8,0.35)",    text: "#FACC15" },
+  Pandas:          { bg: "rgba(99,102,241,0.08)",   border: "rgba(99,102,241,0.35)",   text: "#818CF8" },
+  "Claude API":    { bg: "rgba(201,136,78,0.08)",   border: "rgba(201,136,78,0.35)",   text: "#D4956A" },
+  "Next.js":       { bg: "rgba(250,250,250,0.06)",  border: "rgba(250,250,250,0.25)",  text: "#F1F5F9" },
+  TypeScript:      { bg: "rgba(49,120,198,0.08)",   border: "rgba(49,120,198,0.35)",   text: "#60A5FA" },
+  JavaScript:      { bg: "rgba(234,179,8,0.08)",    border: "rgba(234,179,8,0.35)",    text: "#FACC15" },
+  Vite:            { bg: "rgba(149,87,234,0.08)",   border: "rgba(149,87,234,0.35)",   text: "#A78BFA" },
+  Tailwind:        { bg: "rgba(6,182,212,0.08)",    border: "rgba(6,182,212,0.35)",    text: "#22D3EE" },
+  "Tailwind CSS":  { bg: "rgba(6,182,212,0.08)",    border: "rgba(6,182,212,0.35)",    text: "#22D3EE" },
+  PostgreSQL:      { bg: "rgba(51,103,145,0.08)",   border: "rgba(51,103,145,0.35)",   text: "#60A5FA" },
+  "shadcn/ui":     { bg: "rgba(250,250,250,0.06)",  border: "rgba(250,250,250,0.22)",  text: "#CBD5E1" },
+  Recharts:        { bg: "rgba(239,68,68,0.08)",    border: "rgba(239,68,68,0.30)",    text: "#FCA5A5" },
+  "Framer Motion": { bg: "rgba(236,72,153,0.08)",   border: "rgba(236,72,153,0.30)",   text: "#F472B6" },
+  "AI/ML":         { bg: "rgba(168,85,247,0.08)",   border: "rgba(168,85,247,0.35)",   text: "#C084FC" },
+  "IA/ML":         { bg: "rgba(168,85,247,0.08)",   border: "rgba(168,85,247,0.35)",   text: "#C084FC" },
+};
+
+const DEFAULT_BADGE = { bg: "rgba(30,41,59,0.70)", border: "rgba(51,65,85,0.50)", text: "#94A3B8" };
+
+function TechBadge({ tech, size = "sm" }: { tech: string; size?: "sm" | "xs" }) {
+  const style = TECH_COLORS[tech] ?? DEFAULT_BADGE;
+  const padding = size === "xs" ? "px-2 py-0.5" : "px-2.5 py-1";
+  return (
+    <span
+      className={`font-mono text-xs ${padding} inline-block`}
+      style={{
+        background: style.bg,
+        border: `1px solid ${style.border}`,
+        color: style.text,
+      }}
+    >
+      {tech}
+    </span>
+  );
+}
+
+// ─── Scroll Progress Bar ───────────────────────────────────────────────────────
+
+function ScrollProgressBar() {
+  const { scrollYProgress } = useScroll();
+  const scaleX = useSpring(scrollYProgress, { stiffness: 200, damping: 30, restDelta: 0.001 });
+
+  return (
+    <motion.div
+      className="fixed top-0 inset-x-0 z-[60] h-[3px] origin-left"
+      style={{
+        scaleX,
+        background: "linear-gradient(90deg, #1e40af 0%, #0ea5e9 45%, #00d4ff 70%, #FACC15 100%)",
+        boxShadow: "0 0 8px rgba(0,212,255,0.5), 0 0 18px rgba(250,204,21,0.25)",
+      }}
+    />
+  );
+}
 
 // ─── Language Toggle ──────────────────────────────────────────────────────────
 
@@ -90,6 +159,7 @@ function NavBar() {
           : "bg-transparent"
       }`}
     >
+      {/* offset para a barra de progresso acima */}
       <div className="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between gap-4">
         <span className="font-mono text-cyan-400 text-xs tracking-[0.22em] uppercase glow-text-sm shrink-0">
           PORT_OS
@@ -129,6 +199,49 @@ function SectionHeader({ label, title }: { label: string; title: string }) {
         <div className="h-px w-12 bg-cyan-500/50" />
         <div className="h-px flex-1 bg-slate-800/50" />
       </div>
+    </div>
+  );
+}
+
+// ─── Profile Photo ────────────────────────────────────────────────────────────
+
+function ProfilePhoto({ size = 180 }: { size?: number }) {
+  return (
+    <div className="relative shrink-0" style={{ width: size, height: size }}>
+      {/* Outer glow ring */}
+      <div
+        className="absolute inset-0 rounded-full"
+        style={{
+          background: "radial-gradient(circle, rgba(0,212,255,0.18) 0%, transparent 70%)",
+          boxShadow: "0 0 32px rgba(0,212,255,0.22), 0 0 64px rgba(0,212,255,0.08)",
+        }}
+      />
+      {/* Corner HUD markers */}
+      <span className="absolute top-1 left-1 w-3 h-3 border-l border-t border-cyan-400/60" />
+      <span className="absolute top-1 right-1 w-3 h-3 border-r border-t border-cyan-400/60" />
+      <span className="absolute bottom-1 left-1 w-3 h-3 border-l border-b border-cyan-400/60" />
+      <span className="absolute bottom-1 right-1 w-3 h-3 border-r border-b border-cyan-400/60" />
+      {/* Photo */}
+      <div
+        className="relative overflow-hidden rounded-full"
+        style={{
+          width: size,
+          height: size,
+          border: "1.5px solid rgba(0,212,255,0.30)",
+          boxShadow: "inset 0 0 16px rgba(0,212,255,0.10)",
+        }}
+      >
+        <Image
+          src="/profile/wessel.png"
+          alt="Luiz Wessel"
+          fill
+          className="object-cover object-top"
+          priority
+          sizes={`${size}px`}
+        />
+      </div>
+      {/* Status dot */}
+      <span className="absolute bottom-3 right-3 w-3 h-3 rounded-full bg-cyan-400 border-2 border-[#050810] shadow-[0_0_6px_rgba(0,212,255,0.8)]" />
     </div>
   );
 }
@@ -192,56 +305,68 @@ function HeroSection() {
               initial="hidden"
               animate="visible"
               variants={staggerContainer}
+              className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-12 lg:gap-16"
             >
-              {/* Role badge */}
-              <motion.span
-                variants={fadeUp}
-                className="inline-block font-mono text-[0.65rem] sm:text-xs text-cyan-400/80 tracking-[0.2em] sm:tracking-[0.25em] uppercase mb-6 border border-cyan-500/20 px-3 py-1"
-              >
-                {c.hero.role}
-              </motion.span>
+              {/* Text content */}
+              <div className="flex-1">
+                {/* Role badge */}
+                <motion.span
+                  variants={fadeUp}
+                  className="inline-block font-mono text-[0.65rem] sm:text-xs text-cyan-400/80 tracking-[0.2em] sm:tracking-[0.25em] uppercase mb-6 border border-cyan-500/20 px-3 py-1"
+                >
+                  {c.hero.role}
+                </motion.span>
 
-              {/* Name */}
-              <motion.h1
-                variants={fadeUp}
-                className="text-4xl sm:text-5xl md:text-7xl font-bold text-white tracking-tight leading-[0.95] mb-6 glow-text"
-              >
-                {c.hero.name}
-              </motion.h1>
+                {/* Name */}
+                <motion.h1
+                  variants={fadeUp}
+                  className="text-4xl sm:text-5xl md:text-7xl font-bold text-white tracking-tight leading-[0.95] mb-6 glow-text"
+                >
+                  {c.hero.name}
+                </motion.h1>
 
-              {/* Tagline */}
-              <motion.p
-                variants={fadeUp}
-                className="text-slate-200 text-xl sm:text-2xl md:text-3xl max-w-3xl leading-tight mb-5"
-              >
-                {c.hero.tagline}
-              </motion.p>
+                {/* Tagline */}
+                <motion.p
+                  variants={fadeUp}
+                  className="text-slate-200 text-xl sm:text-2xl md:text-3xl max-w-3xl leading-tight mb-5"
+                >
+                  {c.hero.tagline}
+                </motion.p>
 
-              <motion.p
-                variants={fadeUp}
-                className="text-slate-400 text-base sm:text-lg max-w-2xl leading-relaxed mb-10"
-              >
-                {c.hero.description}
-              </motion.p>
+                <motion.p
+                  variants={fadeUp}
+                  className="text-slate-400 text-base sm:text-lg max-w-2xl leading-relaxed mb-10"
+                >
+                  {c.hero.description}
+                </motion.p>
 
-              {/* CTA buttons */}
+                {/* CTA buttons */}
+                <motion.div
+                  variants={fadeUp}
+                  className="flex flex-col sm:flex-row gap-3 sm:gap-4"
+                >
+                  <a
+                    href="#featured"
+                    className="inline-flex justify-center items-center gap-2.5 px-7 py-3.5 bg-cyan-500/10 border border-cyan-500/30 text-cyan-300 font-mono text-xs tracking-widest uppercase hover:bg-cyan-500/18 hover:border-cyan-400/55 transition-all duration-300 glow-box"
+                  >
+                    {c.hero.ctaPrimary}
+                    <span className="text-cyan-500/60">-&gt;</span>
+                  </a>
+                  <a
+                    href="#contact"
+                    className="inline-flex justify-center items-center gap-2.5 px-7 py-3.5 border border-slate-700/60 text-slate-300 font-mono text-xs tracking-widest uppercase hover:border-slate-500 hover:text-white transition-all duration-300"
+                  >
+                    {c.hero.ctaSecondary}
+                  </a>
+                </motion.div>
+              </div>
+
+              {/* Profile photo — desktop right, mobile centered above */}
               <motion.div
                 variants={fadeUp}
-                className="flex flex-col sm:flex-row gap-3 sm:gap-4"
+                className="flex justify-center lg:justify-end lg:shrink-0"
               >
-                <a
-                  href="#featured"
-                  className="inline-flex justify-center items-center gap-2.5 px-7 py-3.5 bg-cyan-500/10 border border-cyan-500/30 text-cyan-300 font-mono text-xs tracking-widest uppercase hover:bg-cyan-500/18 hover:border-cyan-400/55 transition-all duration-300 glow-box"
-                >
-                  {c.hero.ctaPrimary}
-                  <span className="text-cyan-500/60">-&gt;</span>
-                </a>
-                <a
-                  href="#contact"
-                  className="inline-flex justify-center items-center gap-2.5 px-7 py-3.5 border border-slate-700/60 text-slate-300 font-mono text-xs tracking-widest uppercase hover:border-slate-500 hover:text-white transition-all duration-300"
-                >
-                  {c.hero.ctaSecondary}
-                </a>
+                <ProfilePhoto size={220} />
               </motion.div>
             </motion.div>
           )}
@@ -358,12 +483,7 @@ function FeaturedProject() {
                 </span>
                 <div className="mt-3 flex flex-wrap gap-2">
                   {project.technologies.map((tech) => (
-                    <span
-                      key={tech}
-                      className="font-mono text-xs text-slate-300 bg-slate-900/80 border border-slate-700/60 px-2.5 py-1"
-                    >
-                      {tech}
-                    </span>
+                    <TechBadge key={tech} tech={tech} size="sm" />
                   ))}
                 </div>
               </div>
@@ -453,12 +573,7 @@ function ProjectCard({
 
       <div className="flex flex-wrap gap-1.5">
         {project.technologies.map((tag) => (
-          <span
-            key={tag}
-            className="font-mono text-xs text-slate-500 bg-slate-900/70 border border-slate-800/50 px-2 py-0.5"
-          >
-            {tag}
-          </span>
+          <TechBadge key={tag} tech={tag} size="xs" />
         ))}
       </div>
 
@@ -607,22 +722,36 @@ function AboutSection() {
       <div className="relative max-w-6xl mx-auto px-5 sm:px-6">
         <SectionHeader label={ab.label} title={ab.title} />
         <div ref={ref} className="grid md:grid-cols-2 gap-14 items-start">
-          {/* Bio */}
+          {/* Bio + photo */}
           <motion.div
             initial={{ opacity: 0, x: -24 }}
             animate={isInView ? { opacity: 1, x: 0 } : {}}
             transition={{ duration: 0.6 }}
-            className="space-y-5 text-slate-400 leading-relaxed text-[0.95rem]"
+            className="space-y-5"
           >
-            {ab.bio.map((paragraph, i) => (
-              <p key={i}>{paragraph}</p>
-            ))}
+            {/* Compact profile card */}
+            <div className="flex items-center gap-5 mb-2 p-4 border border-slate-800/60 bg-slate-950/40">
+              <ProfilePhoto size={72} />
+              <div>
+                <p className="font-mono text-xs text-cyan-400/70 tracking-widest uppercase mb-1">
+                  {ab.label.replace("// ", "")}
+                </p>
+                <p className="text-white font-semibold text-base leading-snug">Luiz Wessel</p>
+                <p className="text-slate-500 text-xs font-mono mt-0.5">{c.hero.role}</p>
+              </div>
+            </div>
 
-            <div className="pt-2 border-t border-slate-800/60">
-              <p className="font-mono text-xs text-cyan-400/60 tracking-widest uppercase mb-2">
-                {ab.currentSignalLabel}
-              </p>
-              <p className="text-slate-400 text-sm">{ab.currentSignal}</p>
+            <div className="space-y-5 text-slate-400 leading-relaxed text-[0.95rem]">
+              {ab.bio.map((paragraph, i) => (
+                <p key={i}>{paragraph}</p>
+              ))}
+
+              <div className="pt-2 border-t border-slate-800/60">
+                <p className="font-mono text-xs text-cyan-400/60 tracking-widest uppercase mb-2">
+                  {ab.currentSignalLabel}
+                </p>
+                <p className="text-slate-400 text-sm">{ab.currentSignal}</p>
+              </div>
             </div>
           </motion.div>
 
@@ -750,18 +879,21 @@ export default function Home() {
   }, [lang]);
 
   return (
-    <motion.main
-      className="bg-[#050810] min-h-screen overflow-x-hidden"
-      animate={{ opacity: fading ? 0.08 : 1 }}
-      transition={{ duration: 0.15 }}
-    >
-      <NavBar />
-      <HeroSection />
-      <FeaturedProject />
-      <ProjectsSection />
-      <SkillsSection />
-      <AboutSection />
-      <ContactSection />
-    </motion.main>
+    <>
+      <ScrollProgressBar />
+      <motion.main
+        className="bg-[#050810] min-h-screen overflow-x-hidden"
+        animate={{ opacity: fading ? 0.08 : 1 }}
+        transition={{ duration: 0.15 }}
+      >
+        <NavBar />
+        <HeroSection />
+        <FeaturedProject />
+        <ProjectsSection />
+        <SkillsSection />
+        <AboutSection />
+        <ContactSection />
+      </motion.main>
+    </>
   );
 }
