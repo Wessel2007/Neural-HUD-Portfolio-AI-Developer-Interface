@@ -39,143 +39,161 @@ export interface ContactLink {
 
 const EN_PROJECTS: ProjectContent[] = [
   {
-    title: "Neural Vision Classifier",
+    title: "Gate Vision",
+    category: "Computer Vision / IoT",
+    problem:
+      "Condominiums and parking facilities need automated, reliable vehicle access control without manual operator intervention at every entry.",
+    solution:
+      "Built a full-stack platform combining a YOLO + EasyOCR backend for Mercosul plate detection, a FastAPI service that controls an Arduino gate actuator, and a React admin dashboard backed by Supabase for resident management and access logs.",
+    technologies: ["Python", "YOLO", "EasyOCR", "FastAPI", "React", "Supabase", "Arduino"],
+    github: "https://github.com/Wessel2007/Gate-Vision",
+    signal: "End-to-end CV pipeline from image capture to hardware gate actuation",
+  },
+  {
+    title: "Vehicle Plate Detection",
     category: "Computer Vision",
     problem:
-      "Image datasets often contain subtle classes that are hard to separate with rule-based logic.",
+      "Detecting and isolating Brazilian Mercosul license plates in real-world images requires a robust, reusable module before any OCR or access-control logic can run.",
     solution:
-      "Trained and evaluated a CNN classifier with preprocessing, augmentation, and confidence tracking for cleaner model decisions.",
-    technologies: ["Python", "TensorFlow", "OpenCV", "CUDA"],
-    github: "https://github.com/yourusername",
-    demo: "https://your-demo-link.com",
-    signal: "Model training, evaluation, and inference optimization",
+      "Trained a YOLOv11 model to locate plate regions, applied CLAHE contrast enhancement, and implemented a fast crop pipeline that feeds clean plate images to downstream OCR — later integrated into Gate Vision.",
+    technologies: ["Python", "YOLOv11", "OpenCV", "PyTorch", "NumPy"],
+    github: "https://github.com/Wessel2007/deteccao-placas-veiculares",
+    signal: "Model training, image preprocessing, and modular detection pipeline",
   },
   {
-    title: "LLM Fine-Tuning Pipeline",
+    title: "Crypto Insight AI",
+    category: "Applied AI / Finance",
+    problem:
+      "Tracking multiple technical indicators across timeframes for different cryptocurrencies is time-consuming and hard to interpret without a unified scoring layer.",
+    solution:
+      "Built a FastAPI backend that pulls live data via CCXT, computes RSI, EMA, MACD, and volume averages, runs a weighted scoring engine, and calls Claude to generate plain-language market summaries — served through a Next.js dashboard.",
+    technologies: ["Python", "FastAPI", "CCXT", "Pandas", "Claude API", "Next.js", "TypeScript"],
+    github: "https://github.com/Wessel2007/crypto-insight-ai",
+    signal: "Financial data pipelines, indicator scoring, and LLM-powered interpretation",
+  },
+  {
+    title: "Raiz Iguaçu — Hackatour Cataratas 2026",
+    category: "Full-Stack Web",
+    problem:
+      "Community tourism in the Iguaçu region lacks a scalable platform where local producers can list experiences and travelers can discover, book, and review them.",
+    solution:
+      "Delivered a full-stack platform at Hackatour Cataratas 2026 with experience discovery, producer onboarding, admin dashboard with real-time metrics, physical QR-code totem management, and AI-generated visitor behavior insights.",
+    technologies: ["React", "TypeScript", "Vite", "Tailwind", "FastAPI", "PostgreSQL", "shadcn/ui"],
+    github: "https://github.com/Wessel2007/Hackatour-Cataratas",
+    signal: "Hackathon full-stack delivery: product, backend, and data visualization under pressure",
+  },
+  {
+    title: "Pharm Assist",
     category: "Applied AI",
     problem:
-      "General-purpose models can miss domain-specific language, tone, and task constraints.",
+      "Public pharmacy management in Toledo/PR needed an AI-assisted tool to support the city government in tracking and optimizing medication dispensing processes.",
     solution:
-      "Created a reproducible fine-tuning workflow with dataset preparation, LoRA adapters, validation runs, and experiment notes.",
-    technologies: ["Python", "PyTorch", "Hugging Face", "LoRA"],
-    github: "https://github.com/yourusername",
-    signal: "Data preparation, PEFT, and reproducible AI workflows",
+      "Collaborative academic project developed with the Biopark AI course for the Prefeitura de Toledo/PR, applying AI techniques to assist pharmacy workflows and reporting.",
+    technologies: ["Python", "AI/ML"],
+    github: "https://github.com/Wessel2007/Pharm-Assist",
+    signal: "Applied AI for public-sector use case, team collaboration, academic integration",
   },
   {
-    title: "Autonomous Navigation Robot",
-    category: "Arduino / Robotics",
+    title: "New AI Invest",
+    category: "Web / Finance",
     problem:
-      "Small robots need stable movement and local decisions without relying on heavy compute.",
+      "Investors managing multiple asset classes need a clear view of portfolio drift and a concrete rebalancing plan — without relying on spreadsheets.",
     solution:
-      "Implemented PID motor control, ultrasonic obstacle avoidance, and Bluetooth telemetry for fast debugging in the field.",
-    technologies: ["C++", "Arduino", "PID", "Bluetooth"],
-    github: "https://github.com/yourusername",
-    signal: "Embedded control, sensors, and hardware debugging",
+      "Built a React SPA with full asset CRUD, configurable target allocations, an automatic rebalancing calculator, interactive Recharts dashboards, and an insights engine that scores portfolio diversification and ranks suggested actions.",
+    technologies: ["React", "JavaScript", "Tailwind CSS", "Recharts"],
+    github: "https://github.com/Wessel2007/new-ai-invest",
+    signal: "Financial logic, custom hooks, and UX-focused dashboard design",
   },
   {
-    title: "Smart Environment Monitor",
-    category: "Arduino / IoT",
-    problem:
-      "Environmental data is useful only when it is visible, reliable, and easy to interpret.",
-    solution:
-      "Built an ESP32 sensor node that streams readings over MQTT into a dashboard with live status and threshold indicators.",
-    technologies: ["C++", "ESP32", "MQTT", "React"],
-    github: "https://github.com/yourusername",
-    demo: "https://your-demo-link.com",
-    signal: "IoT data flow from sensor to interface",
-  },
-  {
-    title: "AI Study Lab",
-    category: "AI Research Practice",
-    problem:
-      "Learning advanced AI concepts is difficult without small experiments that expose the tradeoffs.",
-    solution:
-      "Created focused notebooks for diffusion, embeddings, model evaluation, and optimization experiments with documented outcomes.",
-    technologies: ["Python", "PyTorch", "Embeddings", "Notebooks"],
-    github: "https://github.com/yourusername",
-    signal: "Research curiosity translated into working experiments",
-  },
-  {
-    title: "Developer Portfolio",
+    title: "Neural HUD Portfolio",
     category: "Web Interface",
     problem:
-      "Technical portfolios can look polished while still failing to explain engineering judgment.",
+      "Technical portfolios often look polished while failing to communicate engineering judgment, project context, or how problems were actually solved.",
     solution:
-      "Designed a recruiter-ready interface that frames projects by problem, solution, and implementation signals.",
-    technologies: ["Next.js", "TypeScript", "Tailwind", "Framer Motion"],
-    github: "https://github.com/yourusername",
-    signal: "Product thinking, UI systems, and motion design",
+      "Designed this recruiter-ready interface in Next.js, framing every project as a structured engineering case study with problem, solution, and implementation signals — built with bilingual support and a HUD-inspired design system.",
+    technologies: ["Next.js", "TypeScript", "Tailwind CSS", "Framer Motion"],
+    github: "https://github.com/Wessel2007/Neural-HUD-Portfolio-AI-Developer-Interface",
+    signal: "Product thinking, UI systems, bilingual content architecture, and motion design",
   },
 ];
 
 const PT_PROJECTS: ProjectContent[] = [
   {
-    title: "Classificador Neural de Visão",
+    title: "Gate Vision",
+    category: "Visão Computacional / IoT",
+    problem:
+      "Condomínios e estacionamentos precisam de controle de acesso veicular automatizado e confiável, sem intervenção manual a cada entrada.",
+    solution:
+      "Construí uma plataforma completa combinando backend YOLO + EasyOCR para detecção de placas Mercosul, serviço FastAPI que controla cancela via Arduino, e dashboard administrativo em React com Supabase para gestão de moradores e histórico de acessos.",
+    technologies: ["Python", "YOLO", "EasyOCR", "FastAPI", "React", "Supabase", "Arduino"],
+    github: "https://github.com/Wessel2007/Gate-Vision",
+    signal: "Pipeline de visão computacional ponta a ponta: da câmera à abertura da cancela",
+  },
+  {
+    title: "Detecção de Placas Veiculares",
     category: "Visão Computacional",
     problem:
-      "Datasets de imagens frequentemente contêm classes sutis difíceis de separar com lógica baseada em regras.",
+      "Detectar e isolar placas Mercosul em imagens reais exige um módulo robusto e reutilizável antes de qualquer lógica de OCR ou controle de acesso.",
     solution:
-      "Treinei e avaliei um classificador CNN com pré-processamento, augmentation e rastreamento de confiança para decisões mais limpas do modelo.",
-    technologies: ["Python", "TensorFlow", "OpenCV", "CUDA"],
-    github: "https://github.com/yourusername",
-    demo: "https://your-demo-link.com",
-    signal: "Treinamento, avaliação e otimização de inferência de modelos",
+      "Treinei um modelo YOLOv11 para localizar regiões de placa, apliquei realce de contraste CLAHE e implementei um pipeline de recorte eficiente que alimenta o OCR posterior — posteriormente integrado ao Gate Vision.",
+    technologies: ["Python", "YOLOv11", "OpenCV", "PyTorch", "NumPy"],
+    github: "https://github.com/Wessel2007/deteccao-placas-veiculares",
+    signal: "Treinamento de modelo, pré-processamento de imagem e pipeline de detecção modular",
   },
   {
-    title: "Pipeline de Fine-Tuning de LLM",
+    title: "Crypto Insight AI",
+    category: "IA Aplicada / Finanças",
+    problem:
+      "Acompanhar múltiplos indicadores técnicos em diferentes timeframes para criptomoedas é trabalhoso e difícil de interpretar sem uma camada unificada de scoring.",
+    solution:
+      "Construí um backend FastAPI que busca dados em tempo real via CCXT, calcula RSI, EMA, MACD e médias de volume, executa um engine de scoring ponderado e chama Claude para gerar resumos de mercado em linguagem natural — servidos em um dashboard Next.js.",
+    technologies: ["Python", "FastAPI", "CCXT", "Pandas", "Claude API", "Next.js", "TypeScript"],
+    github: "https://github.com/Wessel2007/crypto-insight-ai",
+    signal: "Pipelines de dados financeiros, scoring de indicadores e interpretação com LLM",
+  },
+  {
+    title: "Raiz Iguaçu — Hackatour Cataratas 2026",
+    category: "Full-Stack Web",
+    problem:
+      "O turismo comunitário na região do Iguaçu não tem uma plataforma escalável onde produtores locais possam listar experiências e turistas possam descobri-las, reservar e avaliar.",
+    solution:
+      "Entregamos uma plataforma full-stack no Hackatour Cataratas 2026 com descoberta de experiências, onboarding de produtores, dashboard administrativo com métricas em tempo real, gestão de totens físicos com QR Code e insights de comportamento de visitantes gerados por IA.",
+    technologies: ["React", "TypeScript", "Vite", "Tailwind", "FastAPI", "PostgreSQL", "shadcn/ui"],
+    github: "https://github.com/Wessel2007/Hackatour-Cataratas",
+    signal: "Entrega full-stack em hackathon: produto, backend e visualização de dados sob pressão",
+  },
+  {
+    title: "Pharm Assist",
     category: "IA Aplicada",
     problem:
-      "Modelos de uso geral podem perder linguagem específica do domínio, tom e restrições de tarefas.",
+      "A gestão da farmácia municipal de Toledo/PR precisava de uma ferramenta com IA para apoiar a Prefeitura no monitoramento e otimização dos processos de dispensação de medicamentos.",
     solution:
-      "Criei um workflow de fine-tuning reproduzível com preparação de dataset, adaptadores LoRA, execuções de validação e notas de experimento.",
-    technologies: ["Python", "PyTorch", "Hugging Face", "LoRA"],
-    github: "https://github.com/yourusername",
-    signal: "Preparação de dados, PEFT e workflows reproduzíveis de IA",
+      "Projeto integrador acadêmico desenvolvido com o curso de IA do Biopark para a Prefeitura de Toledo/PR, aplicando técnicas de IA para auxiliar workflows farmacêuticos e geração de relatórios.",
+    technologies: ["Python", "IA/ML"],
+    github: "https://github.com/Wessel2007/Pharm-Assist",
+    signal: "IA aplicada ao setor público, colaboração em equipe e integração acadêmica",
   },
   {
-    title: "Robô de Navegação Autônoma",
-    category: "Arduino / Robótica",
+    title: "New AI Invest",
+    category: "Web / Finanças",
     problem:
-      "Robôs pequenos precisam de movimentos estáveis e decisões locais sem depender de computação pesada.",
+      "Investidores que gerenciam múltiplas classes de ativos precisam de uma visão clara do desvio do portfólio e de um plano de rebalanceamento concreto, sem depender de planilhas.",
     solution:
-      "Implementei controle de motor PID, desvio de obstáculos por ultrassom e telemetria Bluetooth para depuração rápida em campo.",
-    technologies: ["C++", "Arduino", "PID", "Bluetooth"],
-    github: "https://github.com/yourusername",
-    signal: "Controle embarcado, sensores e depuração de hardware",
+      "Construí uma SPA em React com CRUD completo de ativos, alocações-alvo configuráveis, calculadora automática de rebalanceamento, dashboards interativos com Recharts e um engine de insights que pontua a diversificação e prioriza ações sugeridas.",
+    technologies: ["React", "JavaScript", "Tailwind CSS", "Recharts"],
+    github: "https://github.com/Wessel2007/new-ai-invest",
+    signal: "Lógica financeira, hooks customizados e design de dashboard focado em UX",
   },
   {
-    title: "Monitor Inteligente de Ambiente",
-    category: "Arduino / IoT",
-    problem:
-      "Dados ambientais são úteis apenas quando visíveis, confiáveis e fáceis de interpretar.",
-    solution:
-      "Construí um nó sensor ESP32 que transmite leituras via MQTT para um dashboard com status ao vivo e indicadores de limite.",
-    technologies: ["C++", "ESP32", "MQTT", "React"],
-    github: "https://github.com/yourusername",
-    demo: "https://your-demo-link.com",
-    signal: "Fluxo de dados IoT do sensor à interface",
-  },
-  {
-    title: "Laboratório de Estudos em IA",
-    category: "Pesquisa em IA",
-    problem:
-      "Aprender conceitos avançados de IA é difícil sem experimentos pequenos que expõem os trade-offs.",
-    solution:
-      "Criei notebooks focados em difusão, embeddings, avaliação de modelos e experimentos de otimização com resultados documentados.",
-    technologies: ["Python", "PyTorch", "Embeddings", "Notebooks"],
-    github: "https://github.com/yourusername",
-    signal: "Curiosidade de pesquisa traduzida em experimentos funcionais",
-  },
-  {
-    title: "Portfólio de Desenvolvedor",
+    title: "Neural HUD Portfolio",
     category: "Interface Web",
     problem:
-      "Portfólios técnicos podem parecer polidos enquanto ainda falham em explicar o julgamento de engenharia.",
+      "Portfólios técnicos frequentemente parecem polidos, mas falham em comunicar o julgamento de engenharia, o contexto dos projetos ou como os problemas foram de fato resolvidos.",
     solution:
-      "Projetei uma interface pronta para recrutadores que enquadra projetos por problema, solução e sinais de implementação.",
-    technologies: ["Next.js", "TypeScript", "Tailwind", "Framer Motion"],
-    github: "https://github.com/yourusername",
-    signal: "Pensamento de produto, sistemas de UI e design de motion",
+      "Projetei esta interface pronta para recrutadores em Next.js, apresentando cada projeto como um estudo de caso de engenharia estruturado com problema, solução e sinais de implementação — com suporte bilíngue e um design system inspirado em HUD.",
+    technologies: ["Next.js", "TypeScript", "Tailwind CSS", "Framer Motion"],
+    github: "https://github.com/Wessel2007/Neural-HUD-Portfolio-AI-Developer-Interface",
+    signal: "Pensamento de produto, sistemas de UI, arquitetura de conteúdo bilíngue e motion design",
   },
 ];
 
@@ -202,10 +220,10 @@ export const content = {
 
     hero: {
       role: "AI & Computer Vision Developer",
-      name: "Your Name",
+      name: "Luiz Wessel",
       tagline: "Engineering AI systems from the edge of the void.",
       description:
-        "I build practical AI, computer vision, and edge prototypes with clear interfaces, measurable behavior, and documentation that helps teams understand the system.",
+        "I build practical AI, computer vision, and edge systems with clear interfaces, measurable behavior, and documentation that helps teams understand the system.",
       ctaPrimary: "Review Featured Work",
       ctaSecondary: "Get in Touch",
       hudSignal: "SIGNAL: HUMAN-READABLE AI",
@@ -225,16 +243,15 @@ export const content = {
       githubButton: "GitHub Repository",
       demoButton: "Live Demo",
       project: {
-        title: "Real-Time Computer Vision Safety Monitor",
+        title: "Gate Vision — Vehicular Access Control Platform",
         category: "Featured Case Study",
         problem:
-          "Manual monitoring is slow, inconsistent, and difficult to scale when visual signals need to be interpreted in real time.",
+          "Condominiums and parking facilities need reliable, automated vehicle access without a manual operator at every entry — and the solution must work in real-world lighting conditions with Mercosul plates.",
         solution:
-          "Built a computer vision pipeline that detects relevant objects, filters noisy frames, and presents clear confidence signals in a lightweight dashboard.",
-        technologies: ["Python", "OpenCV", "PyTorch", "Next.js", "Tailwind"],
-        github: "https://github.com/yourusername",
-        demo: "https://your-demo-link.com",
-        signal: "Vision model + interface + deployment thinking",
+          "Built a complete platform: a Python/FastAPI backend runs a YOLO detection + EasyOCR pipeline with CLAHE preprocessing and TTA fallback for noisy frames; a React admin dashboard backed by Supabase handles resident management, access logs, camera config, and temporary authorizations; an Arduino integration receives serial commands to physically open the gate when a plate is authorized.",
+        technologies: ["Python", "YOLO", "EasyOCR", "FastAPI", "React", "Supabase", "Arduino", "OpenCV"],
+        github: "https://github.com/Wessel2007/Gate-Vision",
+        signal: "End-to-end system thinking: CV pipeline + REST API + hardware actuation + admin interface",
       } as ProjectContent,
     },
 
@@ -290,9 +307,9 @@ export const content = {
       description:
         "If you are hiring for AI, Computer Vision, full-stack prototyping, or hardware-adjacent software, this is the fastest route to reach me.",
       links: [
-        { label: "GitHub", href: "https://github.com/yourusername", tag: "CODE" },
+        { label: "GitHub", href: "https://github.com/Wessel2007", tag: "CODE" },
         { label: "LinkedIn", href: "https://linkedin.com/in/yourprofile", tag: "NETWORK" },
-        { label: "Email", href: "mailto:you@email.com", tag: "DIRECT" },
+        { label: "Email", href: "mailto:heyxist3r@gmail.com", tag: "DIRECT" },
       ] as ContactLink[],
       footerBuild: "BUILD: NEXT.JS / TAILWIND / FRAMER MOTION",
       footerStatus: "SYSTEM STATUS: OPEN TO OPPORTUNITIES",
@@ -320,10 +337,10 @@ export const content = {
 
     hero: {
       role: "Desenvolvedor de IA & Visão Computacional",
-      name: "Seu Nome",
+      name: "Luiz Wessel",
       tagline: "Construindo sistemas de IA na fronteira do desconhecido.",
       description:
-        "Desenvolvo protótipos práticos de IA, visão computacional e edge computing com interfaces claras, comportamento mensurável e documentação que ajuda equipes a entender o sistema.",
+        "Desenvolvo sistemas práticos de IA, visão computacional e edge computing com interfaces claras, comportamento mensurável e documentação que ajuda equipes a entender o sistema.",
       ctaPrimary: "Ver Projeto em Destaque",
       ctaSecondary: "Entrar em Contato",
       hudSignal: "SINAL: IA LEGÍVEL POR HUMANOS",
@@ -343,16 +360,15 @@ export const content = {
       githubButton: "Repositório GitHub",
       demoButton: "Demo ao Vivo",
       project: {
-        title: "Monitor de Segurança por Visão Computacional em Tempo Real",
+        title: "Gate Vision — Plataforma de Controle de Acesso Veicular",
         category: "Estudo de Caso em Destaque",
         problem:
-          "Monitoramento manual é lento, inconsistente e difícil de escalar quando sinais visuais precisam ser interpretados em tempo real.",
+          "Condomínios e estacionamentos precisam de controle de acesso veicular confiável e automatizado, sem operador manual a cada entrada — e a solução precisa funcionar nas condições reais de iluminação com placas Mercosul.",
         solution:
-          "Construí um pipeline de visão computacional que detecta objetos relevantes, filtra frames ruidosos e apresenta sinais de confiança claros em um dashboard leve.",
-        technologies: ["Python", "OpenCV", "PyTorch", "Next.js", "Tailwind"],
-        github: "https://github.com/yourusername",
-        demo: "https://your-demo-link.com",
-        signal: "Modelo de visão + interface + pensamento de deployment",
+          "Construí uma plataforma completa: backend Python/FastAPI executa pipeline de detecção YOLO + EasyOCR com pré-processamento CLAHE e fallback TTA para frames ruidosos; dashboard administrativo React com Supabase gerencia moradores, logs de acesso, câmeras e autorizações temporárias; integração com Arduino recebe comandos seriais para abertura física da cancela quando a placa é autorizada.",
+        technologies: ["Python", "YOLO", "EasyOCR", "FastAPI", "React", "Supabase", "Arduino", "OpenCV"],
+        github: "https://github.com/Wessel2007/Gate-Vision",
+        signal: "Pensamento de sistema ponta a ponta: pipeline CV + API REST + atuação em hardware + interface administrativa",
       } as ProjectContent,
     },
 
@@ -408,9 +424,9 @@ export const content = {
       description:
         "Se você está contratando para IA, Visão Computacional, prototipagem full-stack ou software próximo ao hardware, este é o caminho mais rápido para me alcançar.",
       links: [
-        { label: "GitHub", href: "https://github.com/yourusername", tag: "CÓDIGO" },
+        { label: "GitHub", href: "https://github.com/Wessel2007", tag: "CÓDIGO" },
         { label: "LinkedIn", href: "https://linkedin.com/in/yourprofile", tag: "REDE" },
-        { label: "Email", href: "mailto:you@email.com", tag: "DIRETO" },
+        { label: "Email", href: "mailto:heyxist3r@gmail.com", tag: "DIRETO" },
       ] as ContactLink[],
       footerBuild: "BUILD: NEXT.JS / TAILWIND / FRAMER MOTION",
       footerStatus: "STATUS DO SISTEMA: ABERTO A OPORTUNIDADES",
