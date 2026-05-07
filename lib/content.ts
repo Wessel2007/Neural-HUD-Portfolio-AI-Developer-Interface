@@ -13,10 +13,10 @@ export interface ProjectContent {
   signal: string;
 }
 
-export interface SkillContent {
-  name: string;
-  level: number;
-  category: string;
+export interface TechLayerContent {
+  index: string;
+  title: string;
+  technologies: string[];
 }
 
 export interface StatContent {
@@ -244,20 +244,37 @@ export const content = {
     },
 
     skills: {
-      label: "// Capabilities",
-      title: "Technical Operating Range",
+      label: "// Tech Stack",
+      title: "Domain Architecture",
       description:
-        "A compact view of the stack I use to prototype intelligent systems: model development, interface work, and hardware-facing experiments.",
-      items: [
-        { name: "Python", level: 90, category: "Languages" },
-        { name: "TypeScript / JavaScript", level: 82, category: "Languages" },
-        { name: "C / C++", level: 70, category: "Languages" },
-        { name: "Machine Learning", level: 85, category: "AI / ML" },
-        { name: "TensorFlow / PyTorch", level: 80, category: "AI / ML" },
-        { name: "Computer Vision", level: 78, category: "AI / ML" },
-        { name: "React / Next.js", level: 83, category: "Web" },
-        { name: "Arduino / ESP32", level: 75, category: "Hardware" },
-      ] as SkillContent[],
+        "Stack organized by system responsibility — not by arbitrary language lists. Each layer reflects a distinct role in how I build intelligent, end-to-end software.",
+      layers: [
+        {
+          index: "01",
+          title: "Interface Layer",
+          technologies: ["React", "Next.js", "JavaScript", "HTML", "CSS", "Tailwind", "Framer Motion"],
+        },
+        {
+          index: "02",
+          title: "Intelligence Layer",
+          technologies: ["Python", "YOLO", "OpenCV", "OCR", "NumPy", "Roboflow", "CVAT"],
+        },
+        {
+          index: "03",
+          title: "Data Layer",
+          technologies: ["PostgreSQL", "MySQL", "Supabase", "SQL", "DBeaver"],
+        },
+        {
+          index: "04",
+          title: "Integration Layer",
+          technologies: ["FastAPI", "REST APIs", "Arduino", "IoT", "Airflow"],
+        },
+        {
+          index: "05",
+          title: "Deployment Layer",
+          technologies: ["Git", "GitHub", "Docker", "Vercel"],
+        },
+      ] as TechLayerContent[],
     },
 
     about: {
@@ -361,20 +378,37 @@ export const content = {
     },
 
     skills: {
-      label: "// Capacidades",
-      title: "Faixa Operacional Técnica",
+      label: "// Stack Técnico",
+      title: "Arquitetura de Domínio",
       description:
-        "Uma visão compacta do stack que uso para prototipar sistemas inteligentes: desenvolvimento de modelos, trabalho de interface e experimentos voltados ao hardware.",
-      items: [
-        { name: "Python", level: 90, category: "Linguagens" },
-        { name: "TypeScript / JavaScript", level: 82, category: "Linguagens" },
-        { name: "C / C++", level: 70, category: "Linguagens" },
-        { name: "Machine Learning", level: 85, category: "IA / ML" },
-        { name: "TensorFlow / PyTorch", level: 80, category: "IA / ML" },
-        { name: "Visão Computacional", level: 78, category: "IA / ML" },
-        { name: "React / Next.js", level: 83, category: "Web" },
-        { name: "Arduino / ESP32", level: 75, category: "Hardware" },
-      ] as SkillContent[],
+        "Stack organizado por responsabilidade do sistema — não por uma lista aleatória de linguagens. Cada camada reflete um papel distinto em como construo software inteligente ponta a ponta.",
+      layers: [
+        {
+          index: "01",
+          title: "Camada de Interface",
+          technologies: ["React", "Next.js", "JavaScript", "HTML", "CSS", "Tailwind", "Framer Motion"],
+        },
+        {
+          index: "02",
+          title: "Camada de Inteligência",
+          technologies: ["Python", "YOLO", "OpenCV", "OCR", "NumPy", "Roboflow", "CVAT"],
+        },
+        {
+          index: "03",
+          title: "Camada de Dados",
+          technologies: ["PostgreSQL", "MySQL", "Supabase", "SQL", "DBeaver"],
+        },
+        {
+          index: "04",
+          title: "Camada de Integração",
+          technologies: ["FastAPI", "REST APIs", "Arduino", "IoT", "Airflow"],
+        },
+        {
+          index: "05",
+          title: "Camada de Deploy",
+          technologies: ["Git", "GitHub", "Docker", "Vercel"],
+        },
+      ] as TechLayerContent[],
     },
 
     about: {

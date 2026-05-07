@@ -4,7 +4,7 @@ import { motion, AnimatePresence, useInView, useScroll, useSpring } from "framer
 import { useRef, useState, useEffect } from "react";
 import Image from "next/image";
 import { useLang } from "@/lib/language-context";
-import { content, type ProjectContent, type SkillContent } from "@/lib/content";
+import { content, type ProjectContent, type TechLayerContent } from "@/lib/content";
 
 // ─── Animation Variants ───────────────────────────────────────────────────────
 
@@ -53,6 +53,21 @@ const TECH_COLORS: Record<string, { bg: string; border: string; text: string }> 
   "Framer Motion": { bg: "rgba(236,72,153,0.08)",   border: "rgba(236,72,153,0.30)",   text: "#F472B6" },
   "AI/ML":         { bg: "rgba(168,85,247,0.08)",   border: "rgba(168,85,247,0.35)",   text: "#C084FC" },
   "IA/ML":         { bg: "rgba(168,85,247,0.08)",   border: "rgba(168,85,247,0.35)",   text: "#C084FC" },
+  HTML:            { bg: "rgba(234,88,12,0.08)",    border: "rgba(234,88,12,0.35)",    text: "#FB923C" },
+  CSS:             { bg: "rgba(59,130,246,0.08)",   border: "rgba(59,130,246,0.35)",   text: "#93C5FD" },
+  OCR:             { bg: "rgba(168,85,247,0.08)",   border: "rgba(168,85,247,0.35)",   text: "#C084FC" },
+  Roboflow:        { bg: "rgba(99,102,241,0.08)",   border: "rgba(99,102,241,0.35)",   text: "#818CF8" },
+  CVAT:            { bg: "rgba(71,85,105,0.12)",    border: "rgba(100,116,139,0.40)",  text: "#94A3B8" },
+  MySQL:           { bg: "rgba(234,88,12,0.08)",    border: "rgba(234,88,12,0.35)",    text: "#FB923C" },
+  SQL:             { bg: "rgba(51,103,145,0.08)",   border: "rgba(51,103,145,0.35)",   text: "#7DD3FC" },
+  DBeaver:         { bg: "rgba(71,85,105,0.12)",    border: "rgba(100,116,139,0.40)",  text: "#94A3B8" },
+  "REST APIs":     { bg: "rgba(5,150,105,0.08)",    border: "rgba(5,150,105,0.35)",    text: "#6EE7B7" },
+  IoT:             { bg: "rgba(0,151,167,0.08)",    border: "rgba(0,151,167,0.35)",    text: "#67E8F9" },
+  Airflow:         { bg: "rgba(14,165,233,0.08)",   border: "rgba(14,165,233,0.35)",   text: "#38BDF8" },
+  Git:             { bg: "rgba(239,68,68,0.08)",    border: "rgba(239,68,68,0.35)",    text: "#FCA5A5" },
+  GitHub:          { bg: "rgba(250,250,250,0.06)",  border: "rgba(250,250,250,0.22)",  text: "#CBD5E1" },
+  Docker:          { bg: "rgba(14,165,233,0.08)",   border: "rgba(14,165,233,0.35)",   text: "#0EA5E9" },
+  Vercel:          { bg: "rgba(250,250,250,0.06)",  border: "rgba(250,250,250,0.25)",  text: "#F1F5F9" },
 };
 
 const DEFAULT_BADGE = { bg: "rgba(30,41,59,0.70)", border: "rgba(51,65,85,0.50)", text: "#94A3B8" };
@@ -637,37 +652,39 @@ function ProjectsSection() {
   );
 }
 
-// ─── Skills Section ───────────────────────────────────────────────────────────
+// ─── Tech Stack Section ───────────────────────────────────────────────────────
 
-function SkillBar({ skill, index }: { skill: SkillContent; index: number }) {
+function TechLayerCard({ layer, index }: { layer: TechLayerContent; index: number }) {
   const ref = useRef<HTMLDivElement>(null);
-  const isInView = useInView(ref, { once: true, amount: 0.5 });
+  const isInView = useInView(ref, { once: true, amount: 0.2 });
 
   return (
     <motion.div
       ref={ref}
-      initial={{ opacity: 0, x: -18 }}
-      animate={isInView ? { opacity: 1, x: 0 } : {}}
-      transition={{ duration: 0.45, delay: index * 0.07 }}
-      className="space-y-2"
+      initial={{ opacity: 0, y: 28 }}
+      animate={isInView ? { opacity: 1, y: 0 } : {}}
+      transition={{ duration: 0.5, delay: index * 0.1, ease: EASE_OUT }}
+      className="industrial-panel group relative bg-slate-950/60 border border-slate-800/70 p-5 sm:p-6 flex flex-col gap-4 glow-box-hover overflow-hidden"
     >
-      <div className="flex justify-between items-center">
-        <span className="text-sm text-slate-300 font-medium">{skill.name}</span>
-        <span className="font-mono text-xs text-cyan-500/65">{skill.level}%</span>
+      {/* Top accent line */}
+      <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-cyan-500/30 to-transparent" />
+      <div className="absolute left-0 top-0 h-12 w-px bg-gradient-to-b from-cyan-400/45 to-transparent" />
+
+      {/* Layer index + title */}
+      <div className="flex items-baseline gap-3">
+        <span className="font-mono text-[0.65rem] text-cyan-400/55 tracking-[0.25em] shrink-0">
+          [{layer.index}]
+        </span>
+        <h3 className="text-sm font-semibold text-slate-200 tracking-wide group-hover:text-white transition-colors duration-200">
+          {layer.title}
+        </h3>
       </div>
-      <div className="h-0.5 bg-slate-800/80 overflow-visible relative">
-        <motion.div
-          initial={{ width: 0 }}
-          animate={isInView ? { width: `${skill.level}%` } : { width: 0 }}
-          transition={{
-            duration: 1.2,
-            delay: index * 0.07 + 0.25,
-            ease: EASE_OUT,
-          }}
-          className="h-full bg-gradient-to-r from-cyan-500 to-sky-400 relative"
-        >
-          <span className="absolute right-0 top-1/2 -translate-y-1/2 w-2.5 h-2.5 rounded-full bg-cyan-400 shadow-[0_0_8px_4px_rgba(0,212,255,0.45)]" />
-        </motion.div>
+
+      {/* Tech badges */}
+      <div className="flex flex-wrap gap-2">
+        {layer.technologies.map((tech) => (
+          <TechBadge key={tech} tech={tech} size="sm" />
+        ))}
       </div>
     </motion.div>
   );
@@ -676,7 +693,6 @@ function SkillBar({ skill, index }: { skill: SkillContent; index: number }) {
 function SkillsSection() {
   const { c } = useLang();
   const sk = c.skills;
-  const categories = [...new Set(sk.items.map((s) => s.category))];
 
   return (
     <section id="skills" className="relative py-24 sm:py-28 bg-slate-950/35">
@@ -686,21 +702,9 @@ function SkillsSection() {
         <p className="-mt-8 sm:-mt-10 mb-12 max-w-2xl text-sm sm:text-base text-slate-500 leading-relaxed">
           {sk.description}
         </p>
-        <div className="grid md:grid-cols-2 gap-x-16 gap-y-12">
-          {categories.map((cat) => (
-            <div key={cat}>
-              <h3 className="font-mono text-xs text-slate-600 tracking-[0.28em] uppercase mb-7 flex items-center gap-3">
-                <span className="w-4 h-px bg-cyan-500/40" />
-                {cat}
-              </h3>
-              <div className="space-y-7">
-                {sk.items
-                  .filter((s) => s.category === cat)
-                  .map((skill, i) => (
-                    <SkillBar key={i} skill={skill} index={i} />
-                  ))}
-              </div>
-            </div>
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          {sk.layers.map((layer, i) => (
+            <TechLayerCard key={layer.index} layer={layer} index={i} />
           ))}
         </div>
       </div>
