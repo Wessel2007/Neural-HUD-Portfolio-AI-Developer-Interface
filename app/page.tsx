@@ -24,6 +24,31 @@ const staggerContainer = {
   visible: { transition: { staggerChildren: 0.13 } },
 };
 
+const layerCardVariants = {
+  hidden: { opacity: 0, y: 32, scale: 0.97 },
+  visible: (i: number) => ({
+    opacity: 1,
+    y: 0,
+    scale: 1,
+    transition: { duration: 0.55, delay: i * 0.12, ease: EASE_OUT },
+  }),
+};
+
+const badgeContainerVariants = {
+  hidden: {},
+  visible: { transition: { staggerChildren: 0.055, delayChildren: 0.28 } },
+};
+
+const badgeItemVariants = {
+  hidden: { opacity: 0, y: 10, scale: 0.85 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    scale: 1,
+    transition: { duration: 0.28, ease: EASE_OUT },
+  },
+};
+
 // ─── Technology Badge Colors ───────────────────────────────────────────────────
 
 const TECH_COLORS: Record<string, { bg: string; border: string; text: string }> = {
@@ -656,36 +681,104 @@ function ProjectsSection() {
 
 function TechLayerCard({ layer, index }: { layer: TechLayerContent; index: number }) {
   const ref = useRef<HTMLDivElement>(null);
-  const isInView = useInView(ref, { once: true, amount: 0.2 });
+  const isInView = useInView(ref, { once: true, amount: 0.18 });
+  const [hovered, setHovered] = useState(false);
 
   return (
     <motion.div
       ref={ref}
-      initial={{ opacity: 0, y: 28 }}
-      animate={isInView ? { opacity: 1, y: 0 } : {}}
-      transition={{ duration: 0.5, delay: index * 0.1, ease: EASE_OUT }}
-      className="industrial-panel group relative bg-slate-950/60 border border-slate-800/70 p-5 sm:p-6 flex flex-col gap-4 glow-box-hover overflow-hidden"
+      custom={index}
+      variants={layerCardVariants}
+      initial="hidden"
+      animate={isInView ? "visible" : "hidden"}
+      whileHover={{ y: -4, transition: { duration: 0.2 } }}
+      onHoverStart={() => setHovered(true)}
+      onHoverEnd={() => setHovered(false)}
+      className="industrial-panel group relative bg-slate-950/60 border p-5 sm:p-6 flex flex-col gap-4 overflow-hidden cursor-default"
+      style={{
+        borderColor: hovered ? "rgba(0,212,255,0.28)" : "rgba(51,65,85,0.70)",
+        boxShadow: hovered
+          ? "0 0 36px rgba(0,212,255,0.10), 0 8px 32px rgba(0,0,0,0.45), inset 0 0 22px rgba(0,212,255,0.03)"
+          : "none",
+        transition: "border-color 0.3s ease, box-shadow 0.3s ease",
+      }}
     >
-      {/* Top accent line */}
-      <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-cyan-500/30 to-transparent" />
-      <div className="absolute left-0 top-0 h-12 w-px bg-gradient-to-b from-cyan-400/45 to-transparent" />
-
-      {/* Layer index + title */}
-      <div className="flex items-baseline gap-3">
-        <span className="font-mono text-[0.65rem] text-cyan-400/55 tracking-[0.25em] shrink-0">
-          [{layer.index}]
-        </span>
-        <h3 className="text-sm font-semibold text-slate-200 tracking-wide group-hover:text-white transition-colors duration-200">
-          {layer.title}
-        </h3>
+      {/* Scanline sweep */}
+      <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden="true">
+        <div
+          className="hud-scanline absolute inset-x-0 h-[2px] bg-gradient-to-r from-transparent via-cyan-400/22 to-transparent"
+          style={{ animationDelay: `${index * -0.9}s` }}
+        />
       </div>
 
-      {/* Tech badges */}
-      <div className="flex flex-wrap gap-2">
-        {layer.technologies.map((tech) => (
-          <TechBadge key={tech} tech={tech} size="sm" />
-        ))}
+      {/* Corner accent — top-left vertical bar */}
+      <div className="absolute left-0 top-0 h-16 w-px bg-gradient-to-b from-cyan-400/55 to-transparent" />
+
+      {/* Top accent line — brightens on hover */}
+      <motion.div
+        className="absolute top-0 left-0 right-0 h-px"
+        animate={
+          hovered
+            ? { opacity: 1, background: "linear-gradient(90deg, transparent, rgba(0,212,255,0.60), transparent)" }
+            : { opacity: 0.6, background: "linear-gradient(90deg, transparent, rgba(0,212,255,0.22), transparent)" }
+        }
+        transition={{ duration: 0.3 }}
+      />
+
+      {/* Radial glow — appears on hover */}
+      <motion.div
+        className="pointer-events-none absolute -right-10 -top-10 w-52 h-52 rounded-full"
+        animate={hovered ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.5 }}
+        transition={{ duration: 0.45 }}
+        style={{ background: "radial-gradient(circle, rgba(0,212,255,0.09) 0%, transparent 70%)" }}
+      />
+
+      {/* Header: index marker + title + status dot */}
+      <div className="relative flex items-center justify-between gap-2">
+        <div className="flex items-baseline gap-2.5">
+          <motion.span
+            className="font-mono text-[0.65rem] tracking-[0.25em] shrink-0"
+            animate={hovered ? { color: "rgba(0,212,255,0.90)" } : { color: "rgba(0,212,255,0.50)" }}
+            transition={{ duration: 0.25 }}
+          >
+            [{layer.index}]
+          </motion.span>
+          <h3 className="text-sm font-semibold text-slate-300 tracking-wide group-hover:text-white transition-colors duration-200">
+            {layer.title}
+          </h3>
+        </div>
+        <span
+          className="hud-pulse-dot shrink-0 w-1.5 h-1.5 rounded-full bg-cyan-400"
+          style={{ animationDelay: `${index * 0.38}s` }}
+        />
       </div>
+
+      {/* Badges — staggered entry + hover lift */}
+      <motion.div
+        className="flex flex-wrap gap-2"
+        variants={badgeContainerVariants}
+        initial="hidden"
+        animate={isInView ? "visible" : "hidden"}
+      >
+        {layer.technologies.map((tech) => {
+          const s = TECH_COLORS[tech] ?? DEFAULT_BADGE;
+          return (
+            <motion.span
+              key={tech}
+              variants={badgeItemVariants}
+              whileHover={{ y: -2, scale: 1.07, transition: { duration: 0.14 } }}
+              className="font-mono text-xs px-2.5 py-1 inline-block cursor-default"
+              style={{
+                background: s.bg,
+                border: `1px solid ${s.border}`,
+                color: s.text,
+              }}
+            >
+              {tech}
+            </motion.span>
+          );
+        })}
+      </motion.div>
     </motion.div>
   );
 }
@@ -693,15 +786,24 @@ function TechLayerCard({ layer, index }: { layer: TechLayerContent; index: numbe
 function SkillsSection() {
   const { c } = useLang();
   const sk = c.skills;
+  const descRef = useRef<HTMLParagraphElement>(null);
+  const descInView = useInView(descRef, { once: true, amount: 0.5 });
 
   return (
-    <section id="skills" className="relative py-24 sm:py-28 bg-slate-950/35">
+    <section id="skills" className="relative py-24 sm:py-28 bg-slate-950/35 hud-grid">
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_0%_50%,rgba(0,212,255,0.05)_0%,transparent_55%)]" />
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_100%_70%,rgba(0,212,255,0.04)_0%,transparent_50%)]" />
       <div className="relative max-w-6xl mx-auto px-5 sm:px-6">
         <SectionHeader label={sk.label} title={sk.title} />
-        <p className="-mt-8 sm:-mt-10 mb-12 max-w-2xl text-sm sm:text-base text-slate-500 leading-relaxed">
+        <motion.p
+          ref={descRef}
+          initial={{ opacity: 0, y: 14 }}
+          animate={descInView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.5, ease: EASE_OUT }}
+          className="-mt-8 sm:-mt-10 mb-12 max-w-2xl text-sm sm:text-base text-slate-500 leading-relaxed"
+        >
           {sk.description}
-        </p>
+        </motion.p>
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {sk.layers.map((layer, i) => (
             <TechLayerCard key={layer.index} layer={layer} index={i} />
