@@ -50,6 +50,17 @@ const EN_PROJECTS: ProjectContent[] = [
     signal: "Model training, image preprocessing, and modular detection pipeline",
   },
   {
+    title: "Corn Instance Segmentation",
+    category: "Computer Vision",
+    problem:
+      "Measuring and segmenting individual corn kernels in images requires precise instance-level detection to support agricultural analysis and quality control workflows.",
+    solution:
+      "Built a computer vision pipeline using CVAT for dataset annotation, OpenCV for image processing, and Python for instance segmentation — enabling accurate isolation and measurement of individual corn kernels from real field images.",
+    technologies: ["Python", "OpenCV", "CVAT"],
+    github: "https://github.com/Wessel2007/corn-instance-segmentation",
+    signal: "Agricultural CV pipeline: instance segmentation, annotation workflow, and measurement from real-world images",
+  },
+  {
     title: "Crypto Insight AI",
     category: "Applied AI / Finance",
     problem:
@@ -117,6 +128,17 @@ const PT_PROJECTS: ProjectContent[] = [
     technologies: ["Python", "YOLOv11", "OpenCV", "PyTorch", "NumPy"],
     github: "https://github.com/Wessel2007/deteccao-placas-veiculares",
     signal: "Treinamento de modelo, pré-processamento de imagem e pipeline de detecção modular",
+  },
+  {
+    title: "Segmentação de Instâncias de Milho",
+    category: "Visão Computacional",
+    problem:
+      "Medir e segmentar grãos individuais de milho em imagens exige detecção precisa no nível de instância para suportar análise agrícola e controle de qualidade.",
+    solution:
+      "Construí um pipeline de visão computacional usando CVAT para anotação de dataset, OpenCV para processamento de imagem e Python para segmentação de instâncias — permitindo o isolamento e a medição precisos de grãos individuais de milho em imagens reais de campo.",
+    technologies: ["Python", "OpenCV", "CVAT"],
+    github: "https://github.com/Wessel2007/corn-instance-segmentation",
+    signal: "Pipeline de CV agrícola: segmentação de instâncias, fluxo de anotação e medição a partir de imagens reais",
   },
   {
     title: "Crypto Insight AI",
