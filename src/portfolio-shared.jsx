@@ -246,7 +246,7 @@ function HeroSection() {
 
       <div className="c" style={{ position:'relative', paddingTop:'120px', paddingBottom:'100px', width:'100%' }}>
         {/* Boot lines — CSS stagger */}
-        <div style={{ fontFamily:'var(--mono)', fontSize:'.72rem', lineHeight:'1.9', marginBottom:'48px', minHeight:'5.5rem' }}>
+        <div className="boot-lines" style={{ fontFamily:'var(--mono)', fontSize:'.72rem', lineHeight:'1.9', marginBottom:'48px', minHeight:'5.5rem' }}>
           {bootLines.map((line, i) => (
             <p key={`${lang}-${i}`} style={{
               color: line.startsWith('[ OK ]') ? 'rgba(0,212,255,.7)' : 'rgba(100,130,165,.65)',
@@ -320,8 +320,8 @@ function HeroSection() {
       )}
 
       {/* HUD labels */}
-      <div style={{ position:'absolute', bottom:'32px', left:'24px', fontFamily:'var(--mono)', fontSize:'.6rem', color:'rgba(255,255,255,.15)', letterSpacing:'.22em' }}>{h.hudSignal}</div>
-      <div style={{ position:'absolute', bottom:'32px', right:'24px', fontFamily:'var(--mono)', fontSize:'.6rem', color:'rgba(255,255,255,.15)', letterSpacing:'.22em' }}>{h.hudStatus}</div>
+      <div className="hud-lbl" style={{ position:'absolute', bottom:'32px', left:'24px', fontFamily:'var(--mono)', fontSize:'.6rem', color:'rgba(255,255,255,.15)', letterSpacing:'.22em' }}>{h.hudSignal}</div>
+      <div className="hud-lbl" style={{ position:'absolute', bottom:'32px', right:'24px', fontFamily:'var(--mono)', fontSize:'.6rem', color:'rgba(255,255,255,.15)', letterSpacing:'.22em' }}>{h.hudStatus}</div>
 
       {/* Scroll indicator */}
       {heroVisible && (

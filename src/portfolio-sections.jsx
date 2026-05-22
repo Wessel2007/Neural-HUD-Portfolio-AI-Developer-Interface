@@ -300,7 +300,7 @@ function ContactSection() {
   const ct = window.CONTENT[lang].contact;
 
   return (
-    <section id="contact" style={{ position:'relative', padding:'clamp(80px,10vw,120px) 0', background:'rgba(3,5,14,.4)' }}>
+    <section id="contact" style={{ position:'relative', padding:'clamp(80px,10vw,120px) 0', background:'rgba(3,5,14,.4)', overflow:'hidden' }}>
       <div style={{ position:'absolute', inset:0, background:'radial-gradient(ellipse at 50% 0%, rgba(0,212,255,.065) 0%, transparent 55%)', pointerEvents:'none' }} />
       {/* Ambient orb */}
       <div className="amb" style={{ width:'600px', height:'400px', background:'rgba(0,212,255,.05)', top:'-100px', left:'50%', transform:'translateX(-50%)', animationDelay:'-2s' }} />
