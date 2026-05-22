@@ -249,6 +249,40 @@
     /* ── Footer ── */
     .footer-grid { display:grid; gap:12px; }
     @media(min-width:768px){ .footer-grid { grid-template-columns:1fr 1fr 1fr; align-items:center; } }
+
+    /* ── Mobile nav ── */
+    .show-mob { display:flex !important; align-items:center; }
+    @media(min-width:768px){ .show-mob { display:none !important; } }
+
+    .mob-menu {
+      background:rgba(4,6,15,.97); backdrop-filter:blur(24px) saturate(1.4);
+      border-top:1px solid rgba(0,212,255,.07);
+      padding:8px 0 20px;
+    }
+    .mob-menu a {
+      display:block; padding:13px 24px;
+      font-family:var(--mono); font-size:.68rem; letter-spacing:.16em; text-transform:uppercase;
+      color:rgba(120,145,175,.75); transition:color .2s, background .2s;
+    }
+    .mob-menu a:hover { color:var(--cyan); background:rgba(0,212,255,.04); }
+    .mob-menu a.mob-active { color:var(--cyan); }
+    @media(min-width:640px){ .mob-menu a { padding:13px 36px; } }
+
+    /* ── Hero photo on mobile ── */
+    .hero-photo-mob { display:flex; justify-content:center; margin-bottom:32px; }
+    @media(min-width:900px){ .hero-photo-mob { display:none !important; } }
+
+    /* ── CTA row full-width on small screens ── */
+    @media(max-width:400px){
+      .cta-row { flex-direction:column !important; }
+      .cta-row a { width:100% !important; text-align:center; justify-content:center; box-sizing:border-box; }
+    }
+
+    /* ── Contact links full-width on small screens ── */
+    @media(max-width:520px){
+      .contact-links { flex-direction:column !important; align-items:stretch !important; }
+      .contact-links > a { justify-content:center !important; }
+    }
   </style>
 </head>
 <body>

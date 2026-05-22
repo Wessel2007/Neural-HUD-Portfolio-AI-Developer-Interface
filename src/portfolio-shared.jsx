@@ -79,6 +79,10 @@ function NavBar() {
   const c = window.CONTENT[lang];
   const [scrolled, setScrolled] = React.useState(false);
   const [active, setActive] = React.useState('');
+  const [menuOpen, setMenuOpen] = React.useState(false);
+  const menuOpenRef = React.useRef(false);
+
+  React.useEffect(() => { menuOpenRef.current = menuOpen; }, [menuOpen]);
 
   React.useEffect(() => {
     const onScroll = () => {
@@ -87,6 +91,7 @@ function NavBar() {
       let cur = '';
       sections.forEach(s => { if (window.scrollY >= s.offsetTop - 100) cur = s.id; });
       setActive(cur);
+      if (menuOpenRef.current) setMenuOpen(false);
     };
     window.addEventListener('scroll', onScroll, { passive:true });
     return () => window.removeEventListener('scroll', onScroll);
@@ -117,8 +122,43 @@ function NavBar() {
             </li>
           ))}
         </ul>
-        <LangToggle />
+        <div style={{ display:'flex', alignItems:'center', gap:'10px' }}>
+          <LangToggle />
+          <button
+            className="show-mob"
+            onClick={() => setMenuOpen(o => !o)}
+            aria-label="Toggle navigation"
+            style={{
+              display:'flex', flexDirection:'column', justifyContent:'center', alignItems:'center', gap:'5px',
+              width:'32px', height:'32px', cursor:'pointer', padding:'4px',
+              border:`1px solid ${menuOpen ? 'rgba(0,212,255,.35)' : 'rgba(0,212,255,.15)'}`,
+              background: menuOpen ? 'rgba(0,212,255,.06)' : 'transparent',
+              transition:'border-color .2s, background .2s', flexShrink:0,
+            }}
+          >
+            <span style={{ display:'block', width:'16px', height:'1px', background:'rgba(0,212,255,.65)', transition:'transform .25s, opacity .2s', transform: menuOpen ? 'translateY(6px) rotate(45deg)' : 'none' }} />
+            <span style={{ display:'block', width:'16px', height:'1px', background:'rgba(0,212,255,.65)', transition:'opacity .2s', opacity: menuOpen ? 0 : 1 }} />
+            <span style={{ display:'block', width:'16px', height:'1px', background:'rgba(0,212,255,.65)', transition:'transform .25s, opacity .2s', transform: menuOpen ? 'translateY(-6px) rotate(-45deg)' : 'none' }} />
+          </button>
+        </div>
       </div>
+      {menuOpen && (
+        <div className="mob-menu">
+          <ul style={{ listStyle:'none', padding:0 }}>
+            {c.navLinks.map(link => (
+              <li key={link.href}>
+                <a
+                  href={link.href}
+                  onClick={() => setMenuOpen(false)}
+                  className={active === link.href.slice(1) ? 'mob-active' : ''}
+                >
+                  {link.label}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
       <style>{`.hide-mobile { display:none } @media(min-width:768px){.hide-mobile{display:flex}}`}</style>
     </nav>
   );
@@ -223,6 +263,11 @@ function HeroSection() {
         {/* Hero content */}
         {heroVisible && (
           <div style={{ display:'flex', flexDirection:'column', gap:'0' }}>
+            {/* Mobile profile photo — hidden at 900px+ */}
+            <div className="hero-photo-mob" style={{ opacity:0, animation:'fadeUp .6s .1s var(--ease) forwards' }}>
+              <ProfilePhoto size={140} />
+            </div>
+
             {/* Role */}
             <div style={{ opacity:0, animation:'fadeUp .5s .05s var(--ease) forwards', marginBottom:'20px' }}>
               <span style={{ fontFamily:'var(--mono)', fontSize:'.68rem', letterSpacing:'.22em', textTransform:'uppercase', color:'rgba(0,212,255,.75)', border:'1px solid rgba(0,212,255,.18)', padding:'5px 14px', display:'inline-block' }}>
@@ -253,7 +298,7 @@ function HeroSection() {
                 </p>
 
                 {/* CTAs */}
-                <div style={{ opacity:0, animation:'fadeUp .5s .66s var(--ease) forwards', display:'flex', flexWrap:'wrap', gap:'12px' }}>
+                <div className="cta-row" style={{ opacity:0, animation:'fadeUp .5s .66s var(--ease) forwards', display:'flex', flexWrap:'wrap', gap:'12px' }}>
                   <a href="#featured" className="btn-p clip-sm">
                     {h.ctaPrimary} <span style={{ color:'rgba(0,212,255,.5)' }}>→</span>
                   </a>

@@ -141,7 +141,7 @@ function ProjectsSection() {
       <div style={{ position:'absolute', inset:0, background:'radial-gradient(ellipse at 100% 50%, rgba(0,212,255,.042) 0%, transparent 55%)', pointerEvents:'none' }} />
       <div className="c" style={{ position:'relative' }}>
         <window.SectionHeader label={proj.label} title={proj.title} />
-        <div style={{ display:'grid', gridTemplateColumns:'repeat(auto-fill,minmax(300px,1fr))', gap:'14px' }}>
+        <div style={{ display:'grid', gridTemplateColumns:'repeat(auto-fill,minmax(min(300px,100%),1fr))', gap:'14px' }}>
           {proj.items.map((item,i) => (
             <ProjectCard key={i} project={item} delay={(i%5)+1} labels={labels} />
           ))}
@@ -216,7 +216,7 @@ function SkillsSection() {
       <div className="c" style={{ position:'relative' }}>
         <window.SectionHeader label={sk.label} title={sk.title} />
         <p className="sr" style={{ marginTop:'-30px', marginBottom:'40px', maxWidth:'600px', fontSize:'.9rem', color:'var(--txt-2)', lineHeight:1.75 }}>{sk.description}</p>
-        <div style={{ display:'grid', gridTemplateColumns:'repeat(auto-fill,minmax(290px,1fr))', gap:'14px' }}>
+        <div style={{ display:'grid', gridTemplateColumns:'repeat(auto-fill,minmax(min(290px,100%),1fr))', gap:'14px' }}>
           {sk.layers.map((layer,i)=><LayerCard key={layer.index} layer={layer} idx={i} />)}
         </div>
       </div>
@@ -316,7 +316,7 @@ function ContactSection() {
           {ct.description}
         </p>
 
-        <div className="sr d3" style={{ display:'flex', flexWrap:'wrap', justifyContent:'center', gap:'12px', marginBottom:'72px' }}>
+        <div className="sr d3 contact-links" style={{ display:'flex', flexWrap:'wrap', justifyContent:'center', gap:'12px', marginBottom:'72px' }}>
           {ct.links.map(link => (
             <a
               key={link.label}
