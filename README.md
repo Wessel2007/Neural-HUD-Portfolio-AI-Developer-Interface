@@ -1,36 +1,64 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Neural HUD Portfolio — Luiz Wessel
 
-## Getting Started
+Portfolio pessoal modernizado com animações avançadas.
 
-First, run the development server:
+## 🚀 Deploy na Vercel
+
+O site é estático: o `index.html` na raiz é servido diretamente, sem build.
+
+### Opção 1 — Dashboard (recomendado)
+
+1. Faça push deste repositório para o GitHub (ou GitLab / Bitbucket)
+2. Acesse [vercel.com/new](https://vercel.com/new) e importe o repositório
+3. Mantenha as configurações padrão:
+   - **Framework Preset:** Other
+   - **Root Directory:** `.` (raiz)
+   - **Build Command:** vazio
+   - **Output Directory:** `.` (raiz)
+4. Clique em **Deploy**
+
+Após o deploy, a Vercel gera uma URL de produção (`https://<projeto>.vercel.app`). Cada push na branch principal atualiza o site; pull requests recebem URLs de preview automaticamente.
+
+### Opção 2 — CLI
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm i -g vercel
+vercel          # primeiro deploy (preview)
+vercel --prod   # produção
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Na primeira execução, faça login e vincule o projeto ao repositório Git, se quiser deploys automáticos a cada push.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Domínio personalizado
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Em **Project → Settings → Domains**, adicione seu domínio e siga as instruções de DNS da Vercel.
 
-## Learn More
+## 📁 Estrutura
 
-To learn more about Next.js, take a look at the following resources:
+```
+index.html          ← arquivo principal (tudo inline, abre direto no browser)
+src/
+  portfolio-data.js     ← conteúdo EN/PT (projetos, skills, textos)
+  portfolio-shared.jsx  ← nav, hero, componentes compartilhados
+  portfolio-sections.jsx← projetos, skills, sobre, contato
+  Portfolio.html        ← versão modular (precisa de servidor)
+  wessel.png            ← foto de perfil
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## ✏️ Como editar conteúdo
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Edite `src/portfolio-data.js` e depois rode o rebuild:
 
-## Deploy on Vercel
+1. Abra `src/Portfolio.html` em um servidor local (ex: `npx serve src/`)
+2. Edite os arquivos `.jsx` e `.js` conforme necessário
+3. Para gerar novo bundle, copie o conteúdo dos 3 arquivos inline no `index.html`
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Ou edite diretamente o `index.html` buscando os textos pelo conteúdo.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## ⚡ Tecnologias
+
+- React 18 + Babel (inline, sem build)
+- Space Grotesk + JetBrains Mono
+- Canvas API (partículas)
+- CSS Animations (glitch, orbit, scan, char stagger)
+- Intersection Observer (scroll reveals)
