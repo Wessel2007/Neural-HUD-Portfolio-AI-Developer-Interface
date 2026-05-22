@@ -46,25 +46,28 @@ function SectionHeader({ label, title, id }) {
 window.SectionHeader = SectionHeader;
 
 // ─── LangToggle ───────────────────────────────────────────────────────────────
-function LangToggle() {
+function LangToggle({ compact }) {
   const { lang, toggle } = React.useContext(LangContext);
   const [hover, setHover] = React.useState(false);
+  const btnStyle = {
+    position:'relative', display:'flex', alignItems:'center', justifyContent:'center',
+    fontFamily:'var(--mono)', fontSize: compact ? '.58rem' : '.62rem',
+    letterSpacing: compact ? '.1em' : '.18em', textTransform:'uppercase',
+    border:`1px solid ${hover?'rgba(0,212,255,.28)':'rgba(255,255,255,.08)'}`,
+    color: hover?'rgba(0,212,255,.9)':'rgba(120,145,175,.8)',
+    padding: compact ? '6px 8px' : '6px 12px',
+    background: hover?'rgba(0,212,255,.06)':'transparent',
+    transition:'all .25s', overflow:'hidden', flexShrink:0, gap: compact ? 0 : '6px',
+  };
+  if (compact) {
+    return (
+      <button className="lang-toggle-compact" onClick={toggle} onMouseEnter={()=>setHover(true)} onMouseLeave={()=>setHover(false)} style={btnStyle} aria-label="Toggle language">
+        <span style={{ color:'rgba(0,212,255,.75)' }}>{lang==='en'?'EN':'PT'}</span>
+      </button>
+    );
+  }
   return (
-    <button
-      onClick={toggle}
-      onMouseEnter={()=>setHover(true)}
-      onMouseLeave={()=>setHover(false)}
-      style={{
-        position:'relative', display:'flex', alignItems:'center', gap:'6px',
-        fontFamily:'var(--mono)', fontSize:'.62rem', letterSpacing:'.18em', textTransform:'uppercase',
-        border:`1px solid ${hover?'rgba(0,212,255,.28)':'rgba(255,255,255,.08)'}`,
-        color: hover?'rgba(0,212,255,.9)':'rgba(120,145,175,.8)',
-        padding:'6px 12px',
-        background: hover?'rgba(0,212,255,.06)':'transparent',
-        transition:'all .25s',
-        overflow:'hidden',
-      }}
-    >
+    <button className="lang-toggle-full" onClick={toggle} onMouseEnter={()=>setHover(true)} onMouseLeave={()=>setHover(false)} style={btnStyle}>
       {hover && <span style={{ position:'absolute', inset:0, top:0, height:'1px', background:'linear-gradient(90deg,transparent,rgba(0,212,255,.4),transparent)', pointerEvents:'none' }} />}
       <span style={{ color:'rgba(0,212,255,.65)' }}>{lang==='en'?'EN':'PT'}</span>
       <span style={{ color:'rgba(255,255,255,.2)' }}>{'→'}</span>
@@ -105,16 +108,14 @@ function NavBar() {
   return (
     <nav id="nav" style={{ opacity:0, transform:'translateY(-56px)', animation:'fadeUp .6s .05s var(--ease) forwards' }}>
       <div id="nav-inner">
-        <span style={{ fontFamily:'var(--mono)', color:'var(--cyan)', fontSize:'.72rem', letterSpacing:'.22em', textTransform:'uppercase', textShadow:'0 0 10px rgba(0,212,255,.4)' }}>
-          PORT_OS
-        </span>
-        <ul style={{ display:'flex', gap:'clamp(16px,3vw,32px)', listStyle:'none', alignItems:'center' }} className="hide-mobile">
+        <span className="nav-brand">PORT_OS</span>
+        <ul className="hide-mobile" style={{ gap:'clamp(16px,3vw,32px)', listStyle:'none', alignItems:'center', margin:0, padding:0 }}>
           {c.navLinks.map(link => (
             <li key={link.href}>
               <a href={link.href} style={{
                 fontFamily:'var(--mono)', fontSize:'.68rem', letterSpacing:'.14em', textTransform:'uppercase',
                 color: active===link.href.slice(1) ? 'var(--cyan)' : 'rgba(120,145,175,.75)',
-                transition:'color .2s',
+                transition:'color .2s', whiteSpace:'nowrap',
               }}
               onMouseEnter={e=>e.target.style.color='var(--cyan)'}
               onMouseLeave={e=>e.target.style.color=active===link.href.slice(1)?'var(--cyan)':'rgba(120,145,175,.75)'}
@@ -122,18 +123,20 @@ function NavBar() {
             </li>
           ))}
         </ul>
-        <div style={{ display:'flex', alignItems:'center', gap:'10px' }}>
+        <div className="nav-actions">
+          <LangToggle compact />
           <LangToggle />
           <button
             className="show-mob"
             onClick={() => setMenuOpen(o => !o)}
-            aria-label="Toggle navigation"
+            aria-label="Abrir menu"
+            aria-expanded={menuOpen}
             style={{
               display:'flex', flexDirection:'column', justifyContent:'center', alignItems:'center', gap:'5px',
-              width:'32px', height:'32px', cursor:'pointer', padding:'4px',
+              width:'36px', height:'36px', cursor:'pointer', padding:'4px', flexShrink:0,
               border:`1px solid ${menuOpen ? 'rgba(0,212,255,.35)' : 'rgba(0,212,255,.15)'}`,
               background: menuOpen ? 'rgba(0,212,255,.06)' : 'transparent',
-              transition:'border-color .2s, background .2s', flexShrink:0,
+              transition:'border-color .2s, background .2s',
             }}
           >
             <span style={{ display:'block', width:'16px', height:'1px', background:'rgba(0,212,255,.65)', transition:'transform .25s, opacity .2s', transform: menuOpen ? 'translateY(6px) rotate(45deg)' : 'none' }} />
@@ -144,7 +147,7 @@ function NavBar() {
       </div>
       {menuOpen && (
         <div className="mob-menu">
-          <ul style={{ listStyle:'none', padding:0 }}>
+          <ul style={{ listStyle:'none', padding:0, margin:0 }}>
             {c.navLinks.map(link => (
               <li key={link.href}>
                 <a
@@ -159,7 +162,6 @@ function NavBar() {
           </ul>
         </div>
       )}
-      <style>{`.hide-mobile { display:none } @media(min-width:768px){.hide-mobile{display:flex}}`}</style>
     </nav>
   );
 }
