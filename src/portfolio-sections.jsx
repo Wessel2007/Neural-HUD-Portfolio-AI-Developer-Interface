@@ -136,14 +136,55 @@ function ProjectsSection() {
   const proj = window.CONTENT[lang].projects;
   const labels = { problem:proj.problemLabel, solution:proj.solutionLabel, github:proj.githubLabel, demo:proj.demoLabel };
 
+  const [activeFilter, setActiveFilter] = React.useState('all');
+
+  React.useEffect(() => { setActiveFilter('all'); }, [lang]);
+
+  const allLabel = lang === 'pt' ? 'Todos' : 'All';
+  const categories = React.useMemo(() => {
+    const seen = new Set();
+    proj.items.forEach(item => { if (item.category) seen.add(item.category); });
+    return Array.from(seen);
+  }, [proj]);
+
+  const filtered = activeFilter === 'all'
+    ? proj.items
+    : proj.items.filter(item => item.category === activeFilter);
+
   return (
     <section id="projects" style={{ position:'relative', padding:'clamp(80px,10vw,120px) 0' }} className="hud-grid">
       <div style={{ position:'absolute', inset:0, background:'radial-gradient(ellipse at 100% 50%, rgba(0,212,255,.042) 0%, transparent 55%)', pointerEvents:'none' }} />
       <div className="c" style={{ position:'relative' }}>
         <window.SectionHeader label={proj.label} title={proj.title} />
+
+        {/* Filter bar */}
+        <div style={{ display:'flex', flexWrap:'wrap', gap:'8px', marginTop:'-24px', marginBottom:'36px' }}>
+          {[allLabel, ...categories].map(cat => {
+            const isActive = cat === allLabel ? activeFilter === 'all' : activeFilter === cat;
+            return (
+              <button
+                key={cat}
+                onClick={() => setActiveFilter(cat === allLabel ? 'all' : cat)}
+                style={{
+                  fontFamily:'var(--mono)', fontSize:'.62rem', letterSpacing:'.16em',
+                  textTransform:'uppercase', padding:'5px 14px',
+                  border:`1px solid ${isActive ? 'rgba(0,212,255,.45)' : 'rgba(0,212,255,.12)'}`,
+                  background: isActive ? 'rgba(0,212,255,.08)' : 'transparent',
+                  color: isActive ? 'rgba(0,212,255,.95)' : 'rgba(120,145,175,.65)',
+                  cursor:'pointer', transition:'all .2s',
+                }}
+                onMouseEnter={e => { if (!isActive) { e.currentTarget.style.borderColor='rgba(0,212,255,.28)'; e.currentTarget.style.color='rgba(160,190,220,.9)'; } }}
+                onMouseLeave={e => { if (!isActive) { e.currentTarget.style.borderColor='rgba(0,212,255,.12)'; e.currentTarget.style.color='rgba(120,145,175,.65)'; } }}
+              >
+                {cat}
+              </button>
+            );
+          })}
+        </div>
+
         <div style={{ display:'grid', gridTemplateColumns:'repeat(auto-fill,minmax(min(300px,100%),1fr))', gap:'14px' }}>
-          {proj.items.map((item,i) => (
-            <ProjectCard key={i} project={item} delay={(i%5)+1} labels={labels} />
+          {filtered.map((item,i) => (
+            <ProjectCard key={item.title} project={item} delay={(i%5)+1} labels={labels} />
           ))}
         </div>
       </div>
