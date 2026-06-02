@@ -1,3 +1,29 @@
+// ─── Status Badge ─────────────────────────────────────────────────────────────
+function StatusBadge({ status }) {
+  const { lang } = React.useContext(window.LangContext);
+  const configs = {
+    done:     { label: lang==='pt'?'CONCLUÍDO':'COMPLETED', color:'#34D399', bg:'rgba(52,211,153,.09)',  border:'rgba(52,211,153,.30)',  pulse:false },
+    dev:      { label: lang==='pt'?'EM DEV':'IN DEV',       color:'#FBBF24', bg:'rgba(251,191,36,.09)',  border:'rgba(251,191,36,.30)',  pulse:true  },
+    archived: { label: lang==='pt'?'ARQUIVADO':'ARCHIVED',  color:'#64748B', bg:'rgba(100,116,139,.07)', border:'rgba(100,116,139,.22)', pulse:false },
+  };
+  const cfg = configs[status] || configs.done;
+  return (
+    <span style={{
+      display:'inline-flex', alignItems:'center', gap:'5px',
+      fontFamily:'var(--mono)', fontSize:'.55rem', letterSpacing:'.16em', textTransform:'uppercase',
+      color:cfg.color, background:cfg.bg, border:`1px solid ${cfg.border}`,
+      padding:'2px 8px', flexShrink:0,
+    }}>
+      <span style={{
+        width:'5px', height:'5px', borderRadius:'50%', background:cfg.color, flexShrink:0,
+        ...(cfg.pulse ? { animation:'pulseDot 2.2s ease-in-out infinite' } : { opacity: status==='archived' ? .4 : 1 }),
+      }} />
+      {cfg.label}
+    </span>
+  );
+}
+window.StatusBadge = StatusBadge;
+
 // ─── Featured Project ─────────────────────────────────────────────────────────
 function FeaturedProject() {
   const { lang } = React.useContext(window.LangContext);
@@ -27,7 +53,10 @@ function FeaturedProject() {
           <div style={{ display:'grid', gridTemplateColumns:'1fr', gap:'clamp(24px,5vw,48px)', alignItems:'start' }}>
             {/* Left */}
             <div>
-              <p style={{ fontFamily:'var(--mono)', fontSize:'.66rem', letterSpacing:'.24em', textTransform:'uppercase', color:'rgba(0,212,255,.7)', marginBottom:'14px' }}>{p.category}</p>
+              <div style={{ display:'flex', alignItems:'center', gap:'10px', flexWrap:'wrap', marginBottom:'14px' }}>
+                <p style={{ fontFamily:'var(--mono)', fontSize:'.66rem', letterSpacing:'.24em', textTransform:'uppercase', color:'rgba(0,212,255,.7)', margin:0 }}>{p.category}</p>
+                {p.status && <window.StatusBadge status={p.status} />}
+              </div>
               <h3 style={{ fontSize:'clamp(1.4rem,3.5vw,2rem)', fontWeight:700, color:'var(--txt-1)', letterSpacing:'-.02em', marginBottom:'20px', lineHeight:1.15 }}>{p.title}</h3>
               <p style={{ color:'var(--txt-2)', lineHeight:1.75, fontSize:'.95rem', marginBottom:'28px', maxWidth:'680px' }}>{f.intro}</p>
 
@@ -92,7 +121,10 @@ function ProjectCard({ project, delay, labels }) {
 
       {/* Header */}
       <div>
-        <p style={{ fontFamily:'var(--mono)', fontSize:'.62rem', letterSpacing:'.22em', textTransform:'uppercase', color:'rgba(0,212,255,.6)', marginBottom:'10px' }}>{project.category}</p>
+        <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', gap:'8px', flexWrap:'wrap', marginBottom:'10px' }}>
+          <p style={{ fontFamily:'var(--mono)', fontSize:'.62rem', letterSpacing:'.22em', textTransform:'uppercase', color:'rgba(0,212,255,.6)', margin:0 }}>{project.category}</p>
+          {project.status && <window.StatusBadge status={project.status} />}
+        </div>
         <h3 style={{ fontSize:'1.02rem', fontWeight:600, color: hovered?'rgba(200,225,255,1)':'var(--txt-1)', transition:'color .2s', lineHeight:1.3 }}>{project.title}</h3>
       </div>
 
