@@ -1279,6 +1279,10 @@ function ProjectsSection() {
 
   React.useEffect(() => { setActiveFilter('all'); }, [lang]);
 
+  React.useEffect(() => {
+    if (window._initSR) window._initSR();
+  }, [activeFilter]);
+
   const allLabel = lang === 'pt' ? 'Todos' : 'All';
   const categories = React.useMemo(() => {
     const seen = new Set();
