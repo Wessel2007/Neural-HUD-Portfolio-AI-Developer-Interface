@@ -449,6 +449,132 @@ export function AboutSection() {
   );
 }
 
+// ─── Publications ─────────────────────────────────────────────────────────────
+function PubCard({ item, delay, readBtn }) {
+  const ref = useRef(null);
+  const [hovered, setHovered] = useState(false);
+  useEffect(() => { initTilt(ref.current); }, []);
+
+  return (
+    <div
+      ref={ref}
+      className={`sr card clip-sm d${delay}`}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      style={{ padding:'clamp(24px,4vw,36px)', position:'relative', overflow:'hidden' }}
+    >
+      {/* Top scan accent */}
+      <div style={{ position:'absolute', inset:'0 0 auto 0', height:'1px', background:`linear-gradient(90deg,transparent,${hovered?'rgba(240,164,41,.55)':'rgba(240,164,41,.2)'},transparent)`, transition:'background .3s' }} />
+      {/* Left amber bar */}
+      <div style={{ position:'absolute', top:0, left:0, width:'3px', height:'100%', background:`linear-gradient(180deg,${hovered?'var(--amber)':'rgba(240,164,41,.55)'} 0%,rgba(240,164,41,0) 100%)`, transition:'background .3s' }} />
+      {/* Scan line (amber tint) */}
+      <div className="scan-line" style={{ position:'absolute', left:0, right:0, height:'1px', background:'linear-gradient(90deg,transparent,rgba(240,164,41,.15),transparent)', animationDelay:`${delay*.9}s` }} />
+      {/* Radial hover glow */}
+      <div style={{ position:'absolute', top:'-40px', right:'-40px', width:'240px', height:'240px', borderRadius:'50%', background:'rgba(240,164,41,.07)', filter:'blur(50px)', opacity:hovered?1:0, transition:'opacity .4s', pointerEvents:'none' }} />
+
+      {/* Header row */}
+      <div style={{ display:'flex', flexWrap:'wrap', alignItems:'flex-start', justifyContent:'space-between', gap:'12px', marginBottom:'16px' }}>
+        <div style={{ flex:'1 1 300px' }}>
+          <p style={{ fontFamily:'var(--mono)', fontSize:'.58rem', letterSpacing:'.2em', textTransform:'uppercase', color:'rgba(240,164,41,.65)', marginBottom:'10px' }}>
+            {item.journal}
+          </p>
+          <h3 style={{ fontSize:'clamp(.92rem,2vw,1.05rem)', fontWeight:600, color:hovered?'rgba(220,235,255,1)':'var(--txt-1)', lineHeight:1.5, marginBottom:'6px', transition:'color .2s', textShadow:hovered?'0 0 12px rgba(240,164,41,.2)':'none' }}>
+            {item.title}
+          </h3>
+          <p style={{ fontFamily:'var(--mono)', fontSize:'.62rem', color:'var(--txt-2)', letterSpacing:'.08em' }}>{item.volume}</p>
+        </div>
+        <a
+          href={item.url}
+          target="_blank"
+          rel="noopener noreferrer"
+          data-hover
+          className="clip-sm"
+          style={{ display:'inline-flex', alignItems:'center', gap:'8px', padding:'10px 18px', border:`1px solid ${hovered?'rgba(240,164,41,.55)':'rgba(240,164,41,.3)'}`, background:hovered?'rgba(240,164,41,.12)':'rgba(240,164,41,.06)', color:'var(--amber)', fontFamily:'var(--mono)', fontSize:'.62rem', letterSpacing:'.14em', textTransform:'uppercase', textDecoration:'none', whiteSpace:'nowrap', transition:'border-color .25s, background .25s, transform .25s', transform:hovered?'translateY(-2px)':'translateY(0)' }}
+        >
+          <span>↗</span><span>{readBtn}</span>
+        </a>
+      </div>
+
+      {/* Abstract */}
+      <p style={{ fontSize:'.85rem', color:'var(--txt-2)', lineHeight:1.8, marginBottom:'20px', borderLeft:`1px solid ${hovered?'rgba(240,164,41,.28)':'rgba(255,255,255,.06)'}`, paddingLeft:'16px', transition:'border-color .3s' }}>
+        {item.abstract}
+      </p>
+
+      {/* Keywords + DOI */}
+      <div style={{ display:'flex', flexWrap:'wrap', alignItems:'center', gap:'8px' }}>
+        {item.keywords.map(kw => (
+          <span key={kw} className="badge" style={{ fontFamily:'var(--mono)', fontSize:'.58rem', letterSpacing:'.1em', padding:'3px 10px', border:'1px solid rgba(0,212,255,.14)', color:'rgba(0,212,255,.6)', background:'rgba(0,212,255,.05)' }}>
+            {kw}
+          </span>
+        ))}
+        <a href={item.doi} target="_blank" rel="noopener noreferrer" data-hover
+          style={{ marginLeft:'auto', fontFamily:'var(--mono)', fontSize:'.58rem', color:'rgba(255,255,255,.32)', letterSpacing:'.1em', textDecoration:'none', transition:'color .2s' }}
+          onMouseEnter={e=>e.currentTarget.style.color='rgba(255,255,255,.65)'}
+          onMouseLeave={e=>e.currentTarget.style.color='rgba(255,255,255,.32)'}
+        >
+          DOI →
+        </a>
+        <span style={{ fontFamily:'var(--mono)', fontSize:'.55rem', color:'rgba(255,255,255,.25)', letterSpacing:'.08em' }}>{item.license}</span>
+      </div>
+    </div>
+  );
+}
+
+export function PublicationsSection() {
+  const { lang } = useContext(LangContext);
+  const pub = CONTENT[lang].publications;
+  const countRef = useRef(null);
+  const countObserved = useRef(false);
+
+  useEffect(() => {
+    countObserved.current = false;
+  }, [lang]);
+
+  useEffect(() => {
+    if (countObserved.current) return;
+    const io = new IntersectionObserver(([e]) => {
+      if (e.isIntersecting) {
+        countObserved.current = true;
+        io.disconnect();
+        if (countRef.current) countUp(countRef.current, String(pub.items.length));
+      }
+    }, { threshold: 0.4 });
+    const section = document.getElementById('publications');
+    if (section) io.observe(section);
+    return () => io.disconnect();
+  }, [pub]);
+
+  return (
+    <section id="publications" style={{ position:'relative', padding:'clamp(80px,10vw,120px) 0', background:'rgba(3,5,14,.4)' }} className="hud-grid">
+      <div style={{ position:'absolute', inset:0, background:'radial-gradient(ellipse at 30% 50%, rgba(240,164,41,.05) 0%, transparent 55%)', pointerEvents:'none' }} />
+      {/* Ambient orb */}
+      <div className="amb" style={{ width:'500px', height:'320px', background:'rgba(240,164,41,.04)', top:'8%', right:'-80px', animationDelay:'-3.5s' }} />
+
+      <div className="c" style={{ position:'relative' }}>
+        <SectionHeader label={pub.label} title={pub.title} />
+
+        {/* Count badge + description */}
+        <div className="sr" style={{ display:'flex', alignItems:'center', gap:'20px', marginBottom:'clamp(40px,6vw,64px)', flexWrap:'wrap' }}>
+          <div className="clip-sm" style={{ display:'flex', alignItems:'center', gap:'14px', padding:'14px 24px', border:'1px solid rgba(240,164,41,.22)', background:'rgba(240,164,41,.06)', position:'relative', overflow:'hidden', flexShrink:0 }}>
+            {/* Shimmer overlay */}
+            <div style={{ position:'absolute', inset:0, background:'linear-gradient(90deg,transparent 0%,rgba(240,164,41,.08) 50%,transparent 100%)', backgroundSize:'200% auto', animation:'shimmer 3s linear infinite', pointerEvents:'none' }} />
+            <span ref={countRef} style={{ fontFamily:'var(--mono)', fontSize:'2.2rem', fontWeight:700, color:'var(--amber)', lineHeight:1, textShadow:'0 0 18px rgba(240,164,41,.5)', position:'relative' }}>{pub.items.length}</span>
+            <span style={{ fontFamily:'var(--mono)', fontSize:'.62rem', letterSpacing:'.18em', textTransform:'uppercase', color:'rgba(240,164,41,.6)', position:'relative' }}>{pub.countLabel}</span>
+          </div>
+          <p className="sr d1" style={{ fontSize:'.88rem', color:'var(--txt-2)', maxWidth:'480px', lineHeight:1.7 }}>{pub.description}</p>
+        </div>
+
+        {/* Article cards */}
+        <div style={{ display:'flex', flexDirection:'column', gap:'20px' }}>
+          {pub.items.map((item, i) => (
+            <PubCard key={i} item={item} delay={i + 2} readBtn={pub.readBtn} />
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
 // ─── Contact Section ──────────────────────────────────────────────────────────
 export function ContactSection() {
   const { lang } = useContext(LangContext);

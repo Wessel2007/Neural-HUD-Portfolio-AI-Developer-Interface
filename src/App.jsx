@@ -7,6 +7,7 @@ import {
   SkillsSection,
   HackathonsSection,
   AboutSection,
+  PublicationsSection,
   ContactSection,
 } from './components/Sections.jsx';
 import { initScrollReveal } from './lib/runtime.js';
@@ -60,6 +61,7 @@ export default function App() {
         <SkillsSection />
         <HackathonsSection />
         <AboutSection />
+        <PublicationsSection />
         <ContactSection />
       </div>
     </LangContext.Provider>
