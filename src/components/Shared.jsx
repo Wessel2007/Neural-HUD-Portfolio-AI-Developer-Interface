@@ -1,28 +1,29 @@
-// ─── Language Context ─────────────────────────────────────────────────────────
-const LangContext = React.createContext({ lang:'en', toggle:()=>{} });
-window.LangContext = LangContext;
+import React, { useContext, useEffect, useRef, useState } from 'react';
+import { LangContext } from '../context.js';
+import { CONTENT, TECH_COLORS, BADGE_DEFAULT } from '../data.js';
+import { TextScramble, Particles } from '../lib/runtime.js';
+import wesselPhoto from '../assets/wessel.png';
 
 // ─── TechBadge ────────────────────────────────────────────────────────────────
-function TechBadge({ tech, xs }) {
-  const s = (window.TECH_COLORS||{})[tech] || window.BADGE_DEFAULT;
+export function TechBadge({ tech, xs }) {
+  const s = TECH_COLORS[tech] || BADGE_DEFAULT;
   return (
     <span className="badge" style={{ background:s.bg, border:`1px solid ${s.border}`, color:s.text, fontSize: xs?'.65rem':'.7rem', padding: xs?'2px 7px':'3px 9px' }}>
       {tech}
     </span>
   );
 }
-window.TechBadge = TechBadge;
 
 // ─── SectionHeader ────────────────────────────────────────────────────────────
-function SectionHeader({ label, title, id }) {
-  const ref = React.useRef(null);
-  React.useEffect(() => {
+export function SectionHeader({ label, title, id }) {
+  const ref = useRef(null);
+  useEffect(() => {
     const el = ref.current;
     if (!el) return;
     const io = new IntersectionObserver(([entry]) => {
       if (entry.isIntersecting) {
         io.disconnect();
-        const scrambler = new window.TextScramble(el);
+        const scrambler = new TextScramble(el);
         scrambler.setText(title);
       }
     }, { threshold: 0.5 });
@@ -43,12 +44,11 @@ function SectionHeader({ label, title, id }) {
     </div>
   );
 }
-window.SectionHeader = SectionHeader;
 
 // ─── LangToggle ───────────────────────────────────────────────────────────────
 function LangToggle({ compact }) {
-  const { lang, toggle } = React.useContext(LangContext);
-  const [hover, setHover] = React.useState(false);
+  const { lang, toggle } = useContext(LangContext);
+  const [hover, setHover] = useState(false);
   const btnStyle = {
     position:'relative', display:'flex', alignItems:'center', justifyContent:'center',
     fontFamily:'var(--mono)', fontSize: compact ? '.58rem' : '.62rem',
@@ -77,17 +77,17 @@ function LangToggle({ compact }) {
 }
 
 // ─── NavBar ───────────────────────────────────────────────────────────────────
-function NavBar() {
-  const { lang } = React.useContext(LangContext);
-  const c = window.CONTENT[lang];
-  const [scrolled, setScrolled] = React.useState(false);
-  const [active, setActive] = React.useState('');
-  const [menuOpen, setMenuOpen] = React.useState(false);
-  const menuOpenRef = React.useRef(false);
+export function NavBar() {
+  const { lang } = useContext(LangContext);
+  const c = CONTENT[lang];
+  const [scrolled, setScrolled] = useState(false);
+  const [active, setActive] = useState('');
+  const [menuOpen, setMenuOpen] = useState(false);
+  const menuOpenRef = useRef(false);
 
-  React.useEffect(() => { menuOpenRef.current = menuOpen; }, [menuOpen]);
+  useEffect(() => { menuOpenRef.current = menuOpen; }, [menuOpen]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     const onScroll = () => {
       setScrolled(window.scrollY > 50);
       const sections = document.querySelectorAll('section[id]');
@@ -100,7 +100,7 @@ function NavBar() {
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
-  React.useEffect(() => {
+  useEffect(() => {
     const nav = document.getElementById('nav');
     if (nav) nav.className = scrolled ? 'scrolled' : '';
   }, [scrolled]);
@@ -109,7 +109,7 @@ function NavBar() {
     <nav id="nav" style={{ opacity:0, transform:'translateY(-56px)', animation:'fadeUp .6s .05s var(--ease) forwards' }}>
       <div id="nav-inner">
         <span className="nav-brand">PORT_OS</span>
-        <ul className="hide-mobile" style={{ gap:'clamp(16px,3vw,32px)', listStyle:'none', alignItems:'center', margin:0, padding:0 }}>
+        <ul className="hide-mobile" style={{ gap:'clamp(14px,2.4vw,28px)', listStyle:'none', alignItems:'center', margin:0, padding:0 }}>
           {c.navLinks.map(link => (
             <li key={link.href}>
               <a href={link.href} style={{
@@ -165,10 +165,9 @@ function NavBar() {
     </nav>
   );
 }
-window.NavBar = NavBar;
 
 // ─── ProfilePhoto ─────────────────────────────────────────────────────────────
-function ProfilePhoto({ size }) {
+export function ProfilePhoto({ size }) {
   size = size || 200;
   return (
     <div style={{ position:'relative', width:size, height:size, flexShrink:0 }}>
@@ -185,45 +184,44 @@ function ProfilePhoto({ size }) {
       ))}
       {/* Photo */}
       <div style={{ position:'relative', width:size, height:size, borderRadius:'50%', overflow:'hidden', border:'1.5px solid rgba(0,212,255,.28)', boxShadow:'inset 0 0 20px rgba(0,212,255,.08)' }}>
-        <img src="./wessel.png" alt="Luiz Wessel" style={{ width:'100%', height:'100%', objectFit:'cover', objectPosition:'top' }} />
+        <img src={wesselPhoto} alt="Luiz Wessel" width={size} height={size} style={{ width:'100%', height:'100%', objectFit:'cover', objectPosition:'top' }} />
       </div>
       {/* Status dot */}
       <span style={{ position:'absolute', bottom:size*.08, right:size*.08, width:11, height:11, borderRadius:'50%', background:'var(--cyan)', border:'2px solid var(--bg)', boxShadow:'0 0 8px rgba(0,212,255,.9)' }} className="p-dot" />
     </div>
   );
 }
-window.ProfilePhoto = ProfilePhoto;
 
 // ─── HeroSection ──────────────────────────────────────────────────────────────
-function HeroSection() {
-  const { lang } = React.useContext(LangContext);
-  const c = window.CONTENT[lang];
+export function HeroSection() {
+  const { lang } = useContext(LangContext);
+  const c = CONTENT[lang];
   const h = c.hero;
 
-  const [heroVisible, setHeroVisible] = React.useState(false);
-  const canvasRef = React.useRef(null);
-  const particlesRef = React.useRef(null);
-  const bootLines = window.CONTENT[lang].bootLines;
+  const [heroVisible, setHeroVisible] = useState(false);
+  const canvasRef = useRef(null);
+  const particlesRef = useRef(null);
+  const bootLines = CONTENT[lang].bootLines;
   const BOOT_DURATION = bootLines.length * 220 + 300; // ms until hero reveals
 
   /* Boot then reveal hero */
-  React.useEffect(() => {
+  useEffect(() => {
     setHeroVisible(false);
     const t = setTimeout(() => setHeroVisible(true), BOOT_DURATION);
     return () => clearTimeout(t);
   }, [lang, BOOT_DURATION]);
 
   /* Canvas particles */
-  React.useEffect(() => {
+  useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
     if (particlesRef.current) { particlesRef.current.destroy(); particlesRef.current=null; }
-    particlesRef.current = new window.Particles(canvas);
+    particlesRef.current = new Particles(canvas);
     return () => { if(particlesRef.current) { particlesRef.current.destroy(); particlesRef.current=null; } };
   }, []);
 
   /* Init scroll animations after hero mounts */
-  React.useEffect(() => {
+  useEffect(() => {
     if (heroVisible) setTimeout(()=>window._initSR&&window._initSR(), 600);
   }, [heroVisible]);
 
@@ -341,4 +339,3 @@ function HeroSection() {
     </section>
   );
 }
-window.HeroSection = HeroSection;

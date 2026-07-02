@@ -1,11 +1,12 @@
 // ─── Portfolio Content Data ───────────────────────────────────────────────────
 
-window.CONTENT = {
+export const CONTENT = {
   en: {
     navLinks: [
       { label: "Featured", href: "#featured" },
       { label: "Projects", href: "#projects" },
       { label: "Skills",   href: "#skills"   },
+      { label: "Hackathons", href: "#hackathons" },
       { label: "About",    href: "#about"    },
       { label: "Contact",  href: "#contact"  },
     ],
@@ -33,6 +34,7 @@ window.CONTENT = {
       solutionLabel: "Solution",
       signalLabel: "Technical Signal",
       techLabel: "Technologies",
+      metricsLabel: "Measured Results",
       githubBtn: "GitHub Repository",
       demoBtn: "Live Demo",
       project: {
@@ -45,6 +47,12 @@ window.CONTENT = {
         demo: null,
         signal: "End-to-end system thinking: CV pipeline + REST API + hardware actuation + admin interface",
         status: "done",
+        metrics: [
+          { value: "98%", label: "Plate detection accuracy (YOLO)" },
+          { value: "93%", label: "OCR read accuracy" },
+          { value: "4.5s", label: "Avg. processing time per vehicle" },
+          { value: "750+", label: "Plate images tested" },
+        ],
       },
     },
     projects: {
@@ -63,7 +71,7 @@ window.CONTENT = {
         { title:"Raiz Iguaçu — Hackatour 2026", category:"Full-Stack Web", problem:"Community tourism in the Iguaçu region lacks a scalable platform for local producers and travelers.", solution:"Full-stack platform with experience discovery, producer onboarding, admin dashboard with real-time metrics, QR-code totem management, and AI-generated visitor insights.", technologies:["React","TypeScript","Vite","Tailwind","FastAPI","PostgreSQL","shadcn/ui"], github:"https://github.com/Wessel2007/Hackatour-Cataratas", demo:null, status:"done" },
         { title:"Pharm Assist", category:"Applied AI", problem:"Public pharmacy management needed an AI-assisted tool to track and optimize medication dispensing processes.", solution:"Collaborative academic project with Biopark AI course for the Prefeitura de Toledo/PR, applying AI to pharmacy workflows.", technologies:["Python","AI/ML"], github:"https://github.com/Wessel2007/Pharm-Assist", demo:null, status:"done" },
         { title:"New AI Invest", category:"Web / Finance", problem:"Investors managing multiple asset classes need a clear view of portfolio drift without relying on spreadsheets.", solution:"React SPA with full asset CRUD, configurable target allocations, rebalancing calculator, Recharts dashboards, and diversification insights.", technologies:["React","JavaScript","Tailwind CSS","Recharts"], github:"https://github.com/Wessel2007/new-ai-invest", demo:null, status:"done" },
-        { title:"Neural HUD Portfolio", category:"Web Interface", problem:"Technical portfolios often fail to communicate engineering judgment or how problems were actually solved.", solution:"Single-file portfolio built with React 18 + Babel inline (no build pipeline) — Canvas API particle background, custom HUD animations, bilingual support, and a design system in vanilla CSS.", technologies:["React","JavaScript","Canvas API","CSS","Babel"], github:"https://github.com/Wessel2007/Neural-HUD-Portfolio-AI-Developer-Interface", demo:null, status:"dev" },
+        { title:"Neural HUD Portfolio", category:"Web Interface", problem:"Technical portfolios often fail to communicate engineering judgment or how problems were actually solved.", solution:"Portfolio built with React 18 + Vite — Canvas API particle background, custom HUD animations, bilingual support, and a design system in vanilla CSS.", technologies:["React","JavaScript","Canvas API","CSS","Vite"], github:"https://github.com/Wessel2007/Neural-HUD-Portfolio-AI-Developer-Interface", demo:null, status:"dev" },
         { title:"Tornado Brasil — Storm Prediction", category:"AI / Meteorology", problem:"Southern Brazil has documented tornado activity but lacks accessible, automated risk-mapping tools to alert communities before extreme weather events.", solution:"Planned ML system to process meteorological data (INMET/ERA5), identify historical storm patterns, and generate regional risk maps for the South of Brazil. Currently in early development.", technologies:["Python","Machine Learning","Pandas","NumPy","Data Science"], github:"https://github.com/Wessel2007/tornado_project", demo:null, status:"dev" },
         { title:"Biopark Hackathon — Protocol Tracker", category:"Full-Stack / Applied AI", problem:"Tracking construction and business protocols across multiple public agencies (cartórios, COPEL, SANEPAR, CBPR) requires constant manual monitoring with no centralized view.", solution:"Web platform with automated Playwright scraping of real public portals, AI chat assistant via Ollama/Llama, PDF reports, screenshot evidence logging, and a full admin dashboard. Built during hackathon.", technologies:["Python","FastAPI","React","Vite","Tailwind","Supabase","Playwright","Ollama"], github:"https://github.com/Wessel2007/hackathon-biopark", demo:null, status:"done" },
       ],
@@ -78,6 +86,29 @@ window.CONTENT = {
         { index:"03", title:"Data Layer",         technologies:["PostgreSQL","MySQL","Supabase","SQL","DBeaver"] },
         { index:"04", title:"Integration Layer",  technologies:["FastAPI","Playwright","REST APIs","Arduino","IoT","Airflow"] },
         { index:"05", title:"Deployment Layer",   technologies:["Git","GitHub","Docker","Vercel"] },
+      ],
+    },
+    hackathons: {
+      label: "// Hackathons & Recognition",
+      title: "Under Pressure, On the Podium",
+      description: "Short timelines, real judging panels, and working software by the deadline — a different kind of technical proof than a portfolio project.",
+      items: [
+        {
+          place: "3rd Place",
+          award: "Awarded",
+          title: "Biopark Hackathon — Protocol Tracker",
+          org: "Biopark",
+          description: "Built an automated protocol-tracking platform (Playwright scraping + Ollama AI assistant + admin dashboard) from scratch during the event. Placed 3rd overall and received a prize.",
+          highlight: true,
+        },
+        {
+          place: "4th Place",
+          award: "Finalist",
+          title: "Hackatour 2026 — Raiz Iguaçu",
+          org: "Hackatour",
+          description: "Designed and shipped a full-stack tourism platform for local producers in the Iguaçu region, including a real-time admin dashboard and QR-code totem management. Finished 4th, without prize.",
+          highlight: false,
+        },
       ],
     },
     about: {
@@ -106,7 +137,7 @@ window.CONTENT = {
         { label:"LinkedIn", href:"https://www.linkedin.com/in/luizwessel/",    tag:"NETWORK" },
         { label:"Email",    href:"mailto:heyxist3r@gmail.com",                 tag:"DIRECT"  },
       ],
-      footerBuild:  "BUILD: REACT 18 / BABEL / CANVAS API",
+      footerBuild:  "BUILD: REACT 18 / VITE / CANVAS API",
       footerStatus: "SYSTEM STATUS: OPEN TO OPPORTUNITIES",
       footerSync:   "LAST SYNC: 2026 / PORT_OS v3.0",
     },
@@ -117,6 +148,7 @@ window.CONTENT = {
       { label: "Destaque",  href: "#featured" },
       { label: "Projetos",  href: "#projects"  },
       { label: "Skills",    href: "#skills"    },
+      { label: "Hackathons", href: "#hackathons" },
       { label: "Sobre",     href: "#about"     },
       { label: "Contato",   href: "#contact"   },
     ],
@@ -144,6 +176,7 @@ window.CONTENT = {
       solutionLabel: "Solução",
       signalLabel: "Sinal Técnico",
       techLabel: "Tecnologias",
+      metricsLabel: "Resultados Medidos",
       githubBtn: "Repositório GitHub",
       demoBtn: "Demo ao Vivo",
       project: {
@@ -156,6 +189,12 @@ window.CONTENT = {
         demo: null,
         signal: "Pensamento ponta a ponta: pipeline CV + API REST + atuação em hardware + interface administrativa",
         status: "done",
+        metrics: [
+          { value: "98%", label: "Acurácia de detecção da placa (YOLO)" },
+          { value: "93%", label: "Acurácia de leitura do OCR" },
+          { value: "4,5s", label: "Tempo médio de processamento por veículo" },
+          { value: "750+", label: "Imagens de placas testadas" },
+        ],
       },
     },
     projects: {
@@ -174,7 +213,7 @@ window.CONTENT = {
         { title:"Raiz Iguaçu — Hackatour 2026", category:"Full-Stack Web", problem:"Turismo comunitário no Iguaçu sem plataforma escalável para produtores e turistas.", solution:"Plataforma full-stack com descoberta de experiências, dashboard admin, totens QR Code e insights de IA.", technologies:["React","TypeScript","Vite","Tailwind","FastAPI","PostgreSQL","shadcn/ui"], github:"https://github.com/Wessel2007/Hackatour-Cataratas", demo:null, status:"done" },
         { title:"Pharm Assist", category:"IA Aplicada", problem:"Gestão farmacêutica municipal precisava de ferramenta com IA para monitorar dispensação.", solution:"Projeto acadêmico com Biopark AI para Prefeitura de Toledo/PR, aplicando IA em workflows farmacêuticos.", technologies:["Python","IA/ML"], github:"https://github.com/Wessel2007/Pharm-Assist", demo:null, status:"done" },
         { title:"New AI Invest", category:"Web / Finanças", problem:"Investidores precisam de visão clara do desvio do portfólio sem depender de planilhas.", solution:"SPA React com CRUD de ativos, alocações-alvo, calculadora de rebalanceamento e dashboards Recharts.", technologies:["React","JavaScript","Tailwind CSS","Recharts"], github:"https://github.com/Wessel2007/new-ai-invest", demo:null, status:"done" },
-        { title:"Neural HUD Portfolio", category:"Interface Web", problem:"Portfólios técnicos falham em comunicar julgamento de engenharia e contexto dos projetos.", solution:"Portfólio em arquivo único com React 18 + Babel inline (sem pipeline de build) — partículas Canvas API, animações HUD customizadas, suporte bilíngue e design system em CSS puro.", technologies:["React","JavaScript","Canvas API","CSS","Babel"], github:"https://github.com/Wessel2007/Neural-HUD-Portfolio-AI-Developer-Interface", demo:null, status:"dev" },
+        { title:"Neural HUD Portfolio", category:"Interface Web", problem:"Portfólios técnicos falham em comunicar julgamento de engenharia e contexto dos projetos.", solution:"Portfólio construído com React 18 + Vite — partículas Canvas API, animações HUD customizadas, suporte bilíngue e design system em CSS puro.", technologies:["React","JavaScript","Canvas API","CSS","Vite"], github:"https://github.com/Wessel2007/Neural-HUD-Portfolio-AI-Developer-Interface", demo:null, status:"dev" },
         { title:"Tornado Brasil — Previsão de Tempestades", category:"IA / Meteorologia", problem:"O sul do Brasil tem registro de tornados mas carece de ferramentas automatizadas de mapeamento de risco para alertar comunidades antes de eventos extremos.", solution:"Sistema de ML planejado para processar dados meteorológicos (INMET/ERA5), identificar padrões históricos de tempestades e gerar mapas de risco regional para o sul do Brasil. Em desenvolvimento inicial.", technologies:["Python","Machine Learning","Pandas","NumPy","Data Science"], github:"https://github.com/Wessel2007/tornado_project", demo:null, status:"dev" },
         { title:"Hackathon Biopark — Rastreador de Protocolos", category:"Full-Stack / IA Aplicada", problem:"Acompanhar protocolos de obras e negócios em múltiplos órgãos públicos (cartórios, COPEL, SANEPAR, CBPR) exige monitoramento manual constante sem visão centralizada.", solution:"Plataforma web com scraping automatizado via Playwright em portais públicos reais, assistente de IA com Ollama/Llama, relatórios PDF, evidências por screenshot e dashboard administrativo. Desenvolvido em hackathon.", technologies:["Python","FastAPI","React","Vite","Tailwind","Supabase","Playwright","Ollama"], github:"https://github.com/Wessel2007/hackathon-biopark", demo:null, status:"done" },
       ],
@@ -189,6 +228,29 @@ window.CONTENT = {
         { index:"03", title:"Camada de Dados",        technologies:["PostgreSQL","MySQL","Supabase","SQL","DBeaver"] },
         { index:"04", title:"Camada de Integração",   technologies:["FastAPI","Playwright","REST APIs","Arduino","IoT","Airflow"] },
         { index:"05", title:"Camada de Deploy",       technologies:["Git","GitHub","Docker","Vercel"] },
+      ],
+    },
+    hackathons: {
+      label: "// Hackathons & Reconhecimentos",
+      title: "Sob Pressão, No Pódio",
+      description: "Prazos curtos, banca de jurados real e software funcionando até o deadline — um tipo de prova técnica diferente de um projeto de portfólio.",
+      items: [
+        {
+          place: "3º Lugar",
+          award: "Premiado",
+          title: "Hackathon Biopark — Rastreador de Protocolos",
+          org: "Biopark",
+          description: "Construí uma plataforma de rastreamento automatizado de protocolos (scraping com Playwright + assistente de IA via Ollama + dashboard admin) do zero durante o evento. Ficamos em 3º lugar geral e recebemos premiação.",
+          highlight: true,
+        },
+        {
+          place: "4º Lugar",
+          award: "Finalista",
+          title: "Hackatour 2026 — Raiz Iguaçu",
+          org: "Hackatour",
+          description: "Projetei e entreguei uma plataforma full-stack de turismo comunitário para produtores locais da região do Iguaçu, incluindo dashboard admin em tempo real e gestão de totens com QR Code. Ficamos em 4º lugar, sem premiação.",
+          highlight: false,
+        },
       ],
     },
     about: {
@@ -217,7 +279,7 @@ window.CONTENT = {
         { label:"LinkedIn", href:"https://www.linkedin.com/in/luizwessel/", tag:"REDE"   },
         { label:"Email",    href:"mailto:heyxist3r@gmail.com",              tag:"DIRETO" },
       ],
-      footerBuild:  "BUILD: REACT 18 / BABEL / CANVAS API",
+      footerBuild:  "BUILD: REACT 18 / VITE / CANVAS API",
       footerStatus: "STATUS DO SISTEMA: ABERTO A OPORTUNIDADES",
       footerSync:   "ÚLTIMA SYNC: 2026 / PORT_OS v3.0",
     },
@@ -225,7 +287,7 @@ window.CONTENT = {
 };
 
 // ─── Tech Badge Color Map ─────────────────────────────────────────────────────
-window.TECH_COLORS = {
+export const TECH_COLORS = {
   Python:          { bg:"rgba(255,212,0,0.07)",    border:"rgba(255,212,0,0.32)",    text:"#FFD44D" },
   YOLO:            { bg:"rgba(239,68,68,0.07)",    border:"rgba(239,68,68,0.32)",    text:"#F87171" },
   YOLOv11:         { bg:"rgba(239,68,68,0.07)",    border:"rgba(239,68,68,0.32)",    text:"#F87171" },
@@ -282,4 +344,5 @@ window.TECH_COLORS = {
   "Canvas API":    { bg:"rgba(234,88,12,0.07)",    border:"rgba(234,88,12,0.28)",    text:"#FB923C" },
   Babel:           { bg:"rgba(250,204,21,0.07)",   border:"rgba(250,204,21,0.28)",   text:"#FDE047" },
 };
-window.BADGE_DEFAULT = { bg:"rgba(20,30,50,0.60)", border:"rgba(51,65,85,0.45)", text:"#94A3B8" };
+
+export const BADGE_DEFAULT = { bg:"rgba(20,30,50,0.60)", border:"rgba(51,65,85,0.45)", text:"#94A3B8" };
