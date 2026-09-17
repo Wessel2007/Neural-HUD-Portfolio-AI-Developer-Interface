@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useMemo, useRef, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import { LangContext } from '../context.js';
 import { CONTENT, TECH_COLORS, BADGE_DEFAULT } from '../data.js';
 import { initTilt, countUp } from '../lib/runtime.js';
@@ -36,7 +36,7 @@ export function FeaturedProject() {
   const p = f.project;
   const ref = useRef(null);
 
-  useEffect(() => { initTilt(ref.current); }, []);
+  useEffect(() => initTilt(ref.current), []);
 
   return (
     <section id="featured" style={{ position:'relative', padding:'clamp(80px,10vw,120px) 0' }} className="hud-grid">
@@ -53,7 +53,7 @@ export function FeaturedProject() {
             {Array.from({length:25}).map((_,i)=><span key={i} style={{ width:'3px', height:'3px', background:'var(--cyan)', borderRadius:'50%' }} />)}
           </div>
 
-          <div style={{ display:'grid', gridTemplateColumns:'1fr', gap:'clamp(24px,5vw,48px)', alignItems:'start' }}>
+          <div className="feat-grid" style={{ display:'grid', gridTemplateColumns:'1fr', gap:'clamp(24px,5vw,48px)', alignItems:'start' }}>
             {/* Left */}
             <div>
               <div style={{ display:'flex', alignItems:'center', gap:'10px', flexWrap:'wrap', marginBottom:'14px' }}>
@@ -114,136 +114,54 @@ export function FeaturedProject() {
   );
 }
 
-// ─── Project Card ─────────────────────────────────────────────────────────────
-function ProjectCard({ project, delay, labels }) {
-  const ref = useRef(null);
-  const [hovered, setHovered] = useState(false);
-  useEffect(() => { initTilt(ref.current); }, []);
-
-  return (
-    <div
-      ref={ref}
-      className={`sr card clip-sm d${delay}`}
-      onMouseEnter={()=>setHovered(true)}
-      onMouseLeave={()=>setHovered(false)}
-      style={{ position:'relative', padding:'clamp(18px,3vw,24px)', display:'flex', flexDirection:'column', gap:'16px', overflow:'hidden', cursor:'default' }}
-    >
-      {/* Top scan accent */}
-      <div style={{ position:'absolute', inset:'0 0 auto 0', height:'1px', background:`linear-gradient(90deg,transparent,${hovered?'rgba(0,212,255,.5)':'rgba(0,212,255,.18)'},transparent)`, transition:'opacity .3s' }} />
-      {/* Left bar */}
-      <div style={{ position:'absolute', left:0, top:0, bottom:0, width:'1px', background:`linear-gradient(to bottom,${hovered?'rgba(0,212,255,.5)':'rgba(0,212,255,.22)'},transparent)`, transition:'opacity .3s' }} />
-      {/* Scan line */}
-      <div className="scan-line" style={{ position:'absolute', left:0, right:0, height:'1px', background:'linear-gradient(90deg,transparent,rgba(0,212,255,.18),transparent)', animationDelay:`${delay*.9}s` }} />
-      {/* Radial hover glow */}
-      <div style={{ position:'absolute', top:'-30px', right:'-30px', width:'180px', height:'180px', borderRadius:'50%', background:'rgba(0,212,255,.06)', filter:'blur(35px)', opacity: hovered?1:0, transition:'opacity .4s', pointerEvents:'none' }} />
-
-      {/* Header */}
-      <div>
-        <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', gap:'8px', flexWrap:'wrap', marginBottom:'10px' }}>
-          <p style={{ fontFamily:'var(--mono)', fontSize:'.62rem', letterSpacing:'.22em', textTransform:'uppercase', color:'rgba(0,212,255,.6)', margin:0 }}>{project.category}</p>
-          {project.status && <StatusBadge status={project.status} />}
-        </div>
-        <h3 style={{ fontSize:'1.02rem', fontWeight:600, color: hovered?'rgba(200,225,255,1)':'var(--txt-1)', transition:'color .2s', lineHeight:1.3 }}>{project.title}</h3>
-      </div>
-
-      {/* Problem / Solution */}
-      <div style={{ flex:1, display:'flex', flexDirection:'column', gap:'12px' }}>
-        {[{lbl:labels.problem,val:project.problem,col:'rgba(140,163,190,.65)'},{lbl:labels.solution,val:project.solution,col:'rgba(140,163,190,.65)'}].map(({lbl,val,col})=>(
-          <div key={lbl}>
-            <p style={{ fontFamily:'var(--mono)', fontSize:'.58rem', letterSpacing:'.2em', textTransform:'uppercase', color:col, marginBottom:'5px' }}>{lbl}</p>
-            <p style={{ fontSize:'.84rem', color:'rgba(160,185,215,.8)', lineHeight:1.65 }}>{val}</p>
-          </div>
-        ))}
-      </div>
-
-      {/* Badges */}
-      <div style={{ display:'flex', flexWrap:'wrap', gap:'6px' }}>
-        {project.technologies.map(t=><TechBadge key={t} tech={t} xs />)}
-      </div>
-
-      {/* Links */}
-      <div style={{ borderTop:'1px solid rgba(255,255,255,.05)', paddingTop:'12px', display:'flex', flexWrap:'wrap', gap:'16px' }}>
-        <a href={project.github} target="_blank" rel="noopener noreferrer"
-          style={{ fontFamily:'var(--mono)', fontSize:'.68rem', color:'rgba(0,212,255,.65)', display:'flex', alignItems:'center', gap:'6px', transition:'color .2s' }}
-          onMouseEnter={e=>e.currentTarget.style.color='var(--cyan)'}
-          onMouseLeave={e=>e.currentTarget.style.color='rgba(0,212,255,.65)'}
-        >{labels.github} <span>→</span></a>
-        {project.demo && (
-          <a href={project.demo} target="_blank" rel="noopener noreferrer"
-            style={{ fontFamily:'var(--mono)', fontSize:'.68rem', color:'rgba(120,145,175,.6)', display:'flex', alignItems:'center', gap:'6px', transition:'color .2s' }}
-            onMouseEnter={e=>e.currentTarget.style.color='var(--txt-1)'}
-            onMouseLeave={e=>e.currentTarget.style.color='rgba(120,145,175,.6)'}
-          >{labels.demo} <span>→</span></a>
-        )}
-      </div>
+// ─── Searchable project collection ───────────────────────────────────────────
+function ProjectCard({ project, index, lang }) {
+  const pt = lang === 'pt';
+  const [expanded, setExpanded] = useState(false);
+  const palette = /Palette/.test(project.title);
+  const vision = /Vision|YOLO|OpenCV/.test(project.technologies.join(' '));
+  return <article className="work-card">
+    <div className={'project-art ' + (palette ? 'art-palette' : vision ? 'art-vision' : 'art-code')} aria-hidden="true">
+      <span className="art-index">PROJECT / {String(index + 1).padStart(2, '0')}</span>
+      {palette ? <div className="palette-swatches">{['#b0e6d1','#59b4a5','#296b70','#e6cfaa','#e89475'].map(color => <span key={color} style={{background:color}} />)}</div> : vision ? <div className="vision-target"><span>OBJECT_IDENTIFIED</span><div /><b>CV / {project.technologies.includes('YOLOv11') ? 'YOLOv11' : 'PIPELINE'}</b></div> : <div className="code-art"><span>~/ {project.title.split(' — ')[0].toLowerCase().replaceAll(' ', '-')}</span><p><i>const</i> future = <b>build</b>({'{'}</p><p>  ideas: <em>true</em>,</p><p>  possibilities: <em>Infinity</em></p><p>{'}'});<span className="code-caret">▌</span></p></div>}
+      <span className="art-caption">{pt ? 'VISUAL CONCEITUAL' : 'CONCEPT VISUAL'}</span>
     </div>
-  );
+    <div className="work-content"><div className="work-meta"><span>{project.category}</span><StatusBadge status={project.status} /></div><h3>{project.title}</h3><p>{project.problem}</p>
+      <div className="work-tags">{project.technologies.slice(0, 4).map(t => <TechBadge key={t} tech={t} xs />)}{project.technologies.length > 4 && <span>+{project.technologies.length - 4}</span>}</div>
+      <div className="work-actions"><button aria-expanded={expanded} onClick={() => setExpanded(v => !v)}>{pt ? 'Como foi construído' : 'How it was built'} <span>{expanded ? '−' : '+'}</span></button><a href={project.github} target="_blank" rel="noopener noreferrer" aria-label={'GitHub — ' + project.title}>GitHub ↗</a></div>
+      {expanded && <div className="work-details"><p>{project.solution}</p><div className="work-tags">{project.technologies.map(t => <TechBadge key={t} tech={t} xs />)}</div>{project.demo && <a href={project.demo} target="_blank" rel="noopener noreferrer">{pt ? 'Abrir demo' : 'Open demo'} ↗</a>}</div>}
+    </div>
+  </article>;
 }
 
-// ─── Projects Section ─────────────────────────────────────────────────────────
 export function ProjectsSection() {
   const { lang } = useContext(LangContext);
+  const pt = lang === 'pt';
   const proj = CONTENT[lang].projects;
-  const labels = { problem:proj.problemLabel, solution:proj.solutionLabel, github:proj.githubLabel, demo:proj.demoLabel };
-
-  const [activeFilter, setActiveFilter] = useState('all');
-
-  useEffect(() => { setActiveFilter('all'); }, [lang]);
+  const [active, setActive] = useState('all');
+  const [query, setQuery] = useState('');
+  const [limit, setLimit] = useState(6);
 
   useEffect(() => {
-    if (window._initSR) window._initSR();
-  }, [activeFilter]);
+    const handler = (e) => { setActive('all'); setQuery(e.detail); setLimit(6); };
+    window.addEventListener('portfolio:searchProject', handler);
+    return () => window.removeEventListener('portfolio:searchProject', handler);
+  }, []);
 
-  const allLabel = lang === 'pt' ? 'Todos' : 'All';
-  const categories = useMemo(() => {
-    const seen = new Set();
-    proj.items.forEach(item => { if (item.category) seen.add(item.category); });
-    return Array.from(seen);
-  }, [proj]);
-
-  const filtered = activeFilter === 'all'
-    ? proj.items
-    : proj.items.filter(item => item.category === activeFilter);
-
-  return (
-    <section id="projects" style={{ position:'relative', padding:'clamp(80px,10vw,120px) 0' }} className="hud-grid">
-      <div style={{ position:'absolute', inset:0, background:'radial-gradient(ellipse at 100% 50%, rgba(0,212,255,.042) 0%, transparent 55%)', pointerEvents:'none' }} />
-      <div className="c" style={{ position:'relative' }}>
-        <SectionHeader label={proj.label} title={proj.title} />
-
-        {/* Filter bar */}
-        <div style={{ display:'flex', flexWrap:'wrap', gap:'8px', marginTop:'-24px', marginBottom:'36px' }}>
-          {[allLabel, ...categories].map(cat => {
-            const isActive = cat === allLabel ? activeFilter === 'all' : activeFilter === cat;
-            return (
-              <button
-                key={cat}
-                onClick={() => setActiveFilter(cat === allLabel ? 'all' : cat)}
-                style={{
-                  fontFamily:'var(--mono)', fontSize:'.62rem', letterSpacing:'.16em',
-                  textTransform:'uppercase', padding:'5px 14px',
-                  border:`1px solid ${isActive ? 'rgba(0,212,255,.45)' : 'rgba(0,212,255,.12)'}`,
-                  background: isActive ? 'rgba(0,212,255,.08)' : 'transparent',
-                  color: isActive ? 'rgba(0,212,255,.95)' : 'rgba(120,145,175,.65)',
-                  cursor:'pointer', transition:'all .2s',
-                }}
-                onMouseEnter={e => { if (!isActive) { e.currentTarget.style.borderColor='rgba(0,212,255,.28)'; e.currentTarget.style.color='rgba(160,190,220,.9)'; } }}
-                onMouseLeave={e => { if (!isActive) { e.currentTarget.style.borderColor='rgba(0,212,255,.12)'; e.currentTarget.style.color='rgba(120,145,175,.65)'; } }}
-              >
-                {cat}
-              </button>
-            );
-          })}
-        </div>
-
-        <div style={{ display:'grid', gridTemplateColumns:'repeat(auto-fill,minmax(min(300px,100%),1fr))', gap:'14px' }}>
-          {filtered.map((item,i) => (
-            <ProjectCard key={item.title} project={item} delay={(i%5)+1} labels={labels} />
-          ))}
-        </div>
-      </div>
-    </section>
-  );
+  const filters = [{id:'all', label:pt?'Todos':'All work'}, {id:'ai',label:'AI / ML'}, {id:'vision',label:pt?'Visão computacional':'Computer vision'}, {id:'web',label:'Web / Mobile'}, {id:'data',label:pt?'Dados & automação':'Data & automation'}];
+  const matches = (p) => {
+    const tech = p.technologies.join(' ');
+    return active === 'all' || (active === 'ai' && /AI|IA|ML|Machine|Generativ/.test(p.category)) || (active === 'vision' && /OpenCV|YOLO/.test(tech)) || (active === 'web' && /React|Next|Streamlit/.test(tech)) || (active === 'data' && /DuckDB|n8n|Playwright/.test(tech));
+  };
+  const filtered = proj.items.filter(p => matches(p) && [p.title,p.category,...p.technologies].join(' ').toLocaleLowerCase().includes(query.trim().toLocaleLowerCase()));
+  return <section id="projects" className="project-section"><div className="c">
+    <SectionHeader label={proj.label} title={pt?'Ideias reais. Sistemas funcionando.':'Real ideas. Working systems.'} />
+    <div className="project-toolbar"><div className="filter-tabs">{filters.map(f => <button key={f.id} aria-pressed={active === f.id} className={active === f.id ? 'active' : ''} onClick={() => {setActive(f.id);setLimit(6);}}>{f.label}</button>)}</div><label className="project-search"><span aria-hidden="true">⌕</span><input value={query} onChange={e => {setQuery(e.target.value);setLimit(6);}} placeholder={pt?'Buscar projeto ou tecnologia':'Search projects or technology'} aria-label={pt?'Buscar projeto ou tecnologia':'Search projects or technology'} /></label></div>
+    <p className="result-count" role="status">{String(filtered.length).padStart(2,'0')} {pt?'projetos encontrados':'projects found'}</p>
+    <div className="work-grid">{filtered.slice(0,limit).map(p => <ProjectCard key={p.github} project={p} index={proj.items.indexOf(p)} lang={lang} />)}</div>
+    {!filtered.length && <div className="empty-projects"><p>{pt?'Nenhum projeto encontrado. Tente outra tecnologia.':'No projects found. Try another technology.'}</p><button className="btn-s" onClick={() => {setQuery('');setActive('all');}}>{pt?'Limpar filtros':'Clear filters'}</button></div>}
+    {filtered.length > limit && <button className="btn-s load-projects" onClick={() => setLimit(filtered.length)}>{pt?'Ver todos os projetos':'View all projects'} <span>+{filtered.length-limit}</span></button>}
+  </div></section>;
 }
 
 // ─── Tech Layer Card ──────────────────────────────────────────────────────────
@@ -453,7 +371,7 @@ export function AboutSection() {
 function PubCard({ item, delay, readBtn }) {
   const ref = useRef(null);
   const [hovered, setHovered] = useState(false);
-  useEffect(() => { initTilt(ref.current); }, []);
+  useEffect(() => initTilt(ref.current), []);
 
   return (
     <div

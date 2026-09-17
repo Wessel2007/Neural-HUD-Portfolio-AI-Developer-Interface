@@ -108,7 +108,7 @@ export function NavBar() {
   return (
     <nav id="nav" style={{ opacity:0, transform:'translateY(-56px)', animation:'fadeUp .6s .05s var(--ease) forwards' }}>
       <div id="nav-inner">
-        <span className="nav-brand">PORT_OS</span>
+        <a href="#home" className="nav-brand" aria-label="Luiz Wessel — Home">LW<span style={{ color: "var(--txt-1)" }}> / </span>PORTFOLIO<span style={{ color: "var(--txt-2)" }}> ®</span></a>
         <ul className="hide-mobile" style={{ gap:'clamp(14px,2.4vw,28px)', listStyle:'none', alignItems:'center', margin:0, padding:0 }}>
           {c.navLinks.map(link => (
             <li key={link.href}>
@@ -193,149 +193,91 @@ export function ProfilePhoto({ size }) {
 }
 
 // ─── HeroSection ──────────────────────────────────────────────────────────────
+const MODE_TECH_FILTERS = [
+  (tech) => /OpenCV|YOLO/.test(tech),
+  (tech) => /PyTorch|Claude|Gemini|Groq|Llama|Machine Learning/.test(tech),
+  (tech) => /Arduino|IoT|Ollama|n8n/.test(tech),
+];
+
+function useModeProjects(lang) {
+  const proj = CONTENT[lang].projects.items;
+  const featured = CONTENT[lang].featured.project;
+  const pool = [featured, ...proj];
+  return MODE_TECH_FILTERS.map((matches) =>
+    pool.filter((p) => matches(p.technologies.join(' '))).slice(0, 2)
+  );
+}
+
+function goToProject(title) {
+  window.dispatchEvent(new CustomEvent('portfolio:searchProject', { detail: title }));
+}
+
 export function HeroSection() {
   const { lang } = useContext(LangContext);
-  const c = CONTENT[lang];
-  const h = c.hero;
-
-  const [heroVisible, setHeroVisible] = useState(false);
+  const pt = lang === 'pt';
+  const [mode, setMode] = useState(0);
+  const modes = ['Computer vision', 'Neural networks', 'Edge systems'];
+  const modeProjects = useModeProjects(lang);
   const canvasRef = useRef(null);
-  const particlesRef = useRef(null);
-  const bootLines = CONTENT[lang].bootLines;
-  const BOOT_DURATION = bootLines.length * 220 + 300; // ms until hero reveals
-
-  /* Boot then reveal hero */
-  useEffect(() => {
-    setHeroVisible(false);
-    const t = setTimeout(() => setHeroVisible(true), BOOT_DURATION);
-    return () => clearTimeout(t);
-  }, [lang, BOOT_DURATION]);
-
-  /* Canvas particles */
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    if (particlesRef.current) { particlesRef.current.destroy(); particlesRef.current=null; }
-    particlesRef.current = new Particles(canvas);
-    return () => { if(particlesRef.current) { particlesRef.current.destroy(); particlesRef.current=null; } };
-  }, []);
-
-  /* Init scroll animations after hero mounts */
-  useEffect(() => {
-    if (heroVisible) setTimeout(()=>window._initSR&&window._initSR(), 600);
-  }, [heroVisible]);
-
-  const name = h.name;
-
+  useEffect(() => { const particles = new Particles(canvasRef.current); return () => particles.destroy(); }, []);
   return (
-    <section id="home" style={{ position:'relative', minHeight:'100vh', display:'flex', flexDirection:'column', justifyContent:'center', overflow:'hidden' }} className="hud-grid">
-      {/* Canvas background */}
-      <canvas ref={canvasRef} style={{ position:'absolute', inset:0, width:'100%', height:'100%', pointerEvents:'none' }} />
-      {/* Radial glow */}
-      <div style={{ position:'absolute', inset:0, background:'radial-gradient(ellipse at 50% -5%, rgba(0,212,255,.1) 0%, transparent 60%)', pointerEvents:'none' }} />
-      {/* Ambient orbs */}
-      <div className="amb" style={{ width:'500px', height:'500px', background:'rgba(0,212,255,.07)', top:'-150px', left:'-100px', animationDelay:'0s' }} />
-      <div className="amb" style={{ width:'400px', height:'400px', background:'rgba(124,111,255,.05)', bottom:'-100px', right:'-80px', animationDelay:'-4s' }} />
-
-      {/* HUD corners */}
-      {[['top:88px','left:24px','T'],['top:88px','right:24px','T'],['bottom:80px','left:24px','B'],['bottom:80px','right:24px','B']].map(([pos1,pos2,tb],i)=>{
-        const [k1,v1]=pos1.split(':'), [k2,v2]=pos2.split(':');
-        const side=k2==='left'?'L':'R';
-        return <div key={i} style={{ position:'absolute', [k1]:v1+'px',[k2]:v2+'px', width:16, height:16, [`border${side==='L'?'Left':'Right'}`]:'1px solid rgba(0,212,255,.18)', [`border${tb==='T'?'Top':'Bottom'}`]:'1px solid rgba(0,212,255,.18)' }} />;
-      })}
-
-      <div className="c" style={{ position:'relative', paddingTop:'120px', paddingBottom:'100px', width:'100%' }}>
-        {/* Boot lines — CSS stagger */}
-        <div className="boot-lines" style={{ fontFamily:'var(--mono)', fontSize:'.72rem', lineHeight:'1.9', marginBottom:'48px', minHeight:'5.5rem' }}>
-          {bootLines.map((line, i) => (
-            <p key={`${lang}-${i}`} style={{
-              color: line.startsWith('[ OK ]') ? 'rgba(0,212,255,.7)' : 'rgba(100,130,165,.65)',
-              opacity: 0,
-              animation: `fadeUp .35s ${60 + i * 200}ms var(--ease) both`,
-              display: 'flex', alignItems: 'center', gap: '6px',
-            }}>
-              {line}
-              {i === bootLines.length - 1 && !heroVisible && <span className="boot-caret" />}
-            </p>
-          ))}
-        </div>
-
-        {/* Hero content */}
-        {heroVisible && (
-          <div style={{ display:'flex', flexDirection:'column', gap:'0' }}>
-            {/* Mobile profile photo — hidden at 900px+ */}
-            <div className="hero-photo-mob" style={{ opacity:0, animation:'fadeUp .6s .1s var(--ease) forwards' }}>
-              <ProfilePhoto size={140} />
+    <section id="home" className="hero-v4 hud-grid">
+      <canvas ref={canvasRef} className="hero-particles" aria-hidden="true" />
+      <div className="c hero-layout">
+        <div className="hero-copy">
+          <div className="eyebrow"><span className="live-dot" /> {pt ? 'DISPONÍVEL PARA NOVAS OPORTUNIDADES' : 'AVAILABLE FOR NEW OPPORTUNITIES'}</div>
+          <div className="hero-name-row">
+            <div className="id-scan" aria-hidden="true">
+              <ProfilePhoto size={72} />
+              <span className="id-scan-corner tl" /><span className="id-scan-corner tr" /><span className="id-scan-corner bl" /><span className="id-scan-corner br" />
             </div>
-
-            {/* Role */}
-            <div style={{ opacity:0, animation:'fadeUp .5s .05s var(--ease) forwards', marginBottom:'20px' }}>
-              <span style={{ fontFamily:'var(--mono)', fontSize:'.68rem', letterSpacing:'.22em', textTransform:'uppercase', color:'rgba(0,212,255,.75)', border:'1px solid rgba(0,212,255,.18)', padding:'5px 14px', display:'inline-block' }}>
-                {h.role}
-              </span>
-            </div>
-
-            {/* Layout row: text + photo */}
-            <div style={{ display:'flex', flexDirection:'column', gap:'40px', alignItems:'flex-start' }}>
-              <div style={{ flex:1, minWidth:0 }}>
-                {/* Name — character stagger */}
-                <div style={{ opacity:0, animation:'fadeUp .6s .15s var(--ease) forwards', marginBottom:'20px', perspective:'600px' }}>
-                  <h1 className="glitch glow" data-text={name} style={{ fontSize:'clamp(2.8rem,8vw,5.5rem)', fontWeight:700, letterSpacing:'-.03em', lineHeight:.92, color:'var(--txt-1)', display:'flex', flexWrap:'wrap' }}>
-                    {name.split('').map((ch,i)=>(
-                      <span key={i} style={{ display:'inline-block', opacity:0, animation:`charIn .55s ${.2+i*.04}s var(--ease) forwards`, whiteSpace: ch===' '?'pre':'normal' }}>{ch===' '?'\u00A0':ch}</span>
-                    ))}
-                  </h1>
-                </div>
-
-                {/* Tagline */}
-                <p style={{ opacity:0, animation:'fadeUp .6s .42s var(--ease) forwards', fontSize:'clamp(1.05rem,2.5vw,1.45rem)', color:'rgba(220,235,250,.9)', maxWidth:'640px', lineHeight:1.35, marginBottom:'14px', fontWeight:500 }}>
-                  {h.tagline}
-                </p>
-
-                {/* Description */}
-                <p style={{ opacity:0, animation:'fadeUp .6s .54s var(--ease) forwards', fontSize:'clamp(.88rem,1.6vw,1rem)', color:'var(--txt-2)', maxWidth:'560px', lineHeight:1.75, marginBottom:'40px' }}>
-                  {h.description}
-                </p>
-
-                {/* CTAs */}
-                <div className="cta-row" style={{ opacity:0, animation:'fadeUp .5s .66s var(--ease) forwards', display:'flex', flexWrap:'wrap', gap:'12px' }}>
-                  <a href="#featured" className="btn-p clip-sm">
-                    {h.ctaPrimary} <span style={{ color:'rgba(0,212,255,.5)' }}>→</span>
-                  </a>
-                  <a href="#contact" className="btn-s clip-sm">
-                    {h.ctaSecondary}
-                  </a>
-                </div>
-              </div>
+            <div className="hero-name-block">
+              <p className="hero-intro">{pt ? 'Olá, eu sou' : "Hi, I’m"}</p>
+              <p className="hero-name">Luiz Wessel</p>
+              <span className="id-confirmed" aria-hidden="true">✓ {pt ? 'IDENTIDADE CONFIRMADA' : 'IDENTITY CONFIRMED'}</span>
             </div>
           </div>
-        )}
+          <h1>{pt ? 'Transformando' : 'Turning'}<br />{pt ? 'ideias em' : 'ideas into'}<br /><span>{pt ? 'inteligência.' : 'intelligence.'}</span></h1>
+          <p className="hero-summary">{pt ? 'IA, visão computacional e software que sai da tela e transforma o mundo real.' : 'AI, computer vision, and software that goes beyond the screen and into the real world.'}</p>
+          <div className="hero-cta"><a href="#projects" className="btn-p">{pt ? 'Explorar projetos' : 'Explore my work'} <span>↗</span></a><a href="#contact" className="btn-s">{pt ? 'Vamos conversar' : 'Let’s connect'} <span>↗</span></a></div>
+          <div className="hero-signature"><div><strong>AI & Computer Vision Developer</strong><span>Biopark · Brasil <span className="signature-plus">+ {pt ? 'curiosidade sem limites' : 'endless curiosity'}</span></span></div></div>
+        </div>
+        <div className="neural-panel">
+          <div className="panel-top"><span><span className="live-dot" /> NEURAL EXPLORER</span><span>v.04</span></div>
+          <div className={'neural-scene mode-' + mode} aria-hidden="true">
+            <div className="scene-cross cross-one">+</div><div className="scene-cross cross-two">+</div>
+            <div className="neural-orb">
+              {Array.from({length: 12}, (_, i) => <div key={i} className="orb-ring" style={{'--i': i}} />)}
+              <div className="orb-core" /><div className="orb-equator" />
+              {/* Vision: focus brackets + scan sweep, like a camera locking onto a target */}
+              <div className="vision-focus"><span /><span /><span /><span /></div>
+              <div className="vision-scan" />
+              {/* Neural: pulses expanding from the core, like activation propagating through layers */}
+              <div className="neural-pulse-ring p1" /><div className="neural-pulse-ring p2" /><div className="neural-pulse-ring p3" />
+              {/* Edge: a ping traveling out and fading, like a local inference round-trip */}
+              <div className="edge-ping" />
+            </div>
+            <div className="scene-label label-one">{['INPUT / VISION', 'INPUT / DATA', 'INPUT / SENSOR'][mode]}<b>{['01 → 128 → 01', '128 → 256 → 512', 'EDGE → INFERENCE'][mode]}</b></div>
+            <div className="scene-label label-two">{['OBJECT DETECTION', 'PATTERN RECOGNITION', 'LOCAL INTELLIGENCE'][mode]}<b>● {(pt ? ['ESCANEANDO', 'PROPAGANDO SINAL', 'PING LOCAL'] : ['SCANNING', 'SIGNAL PROPAGATING', 'LOCAL PING'])[mode]}</b></div>
+          </div>
+          <div className="neural-controls" aria-label={pt ? 'Modo da visualização' : 'Visualization mode'}>{modes.map((m, i) => <button key={m} aria-pressed={mode === i} className={mode === i ? 'selected' : ''} onClick={() => setMode(i)}><span>0{i+1}</span>{m}</button>)}</div>
+          <div className="neural-related">
+            <span className="neural-related-label">{pt ? 'PROJETOS REAIS NESTE DOMÍNIO' : 'REAL PROJECTS IN THIS DOMAIN'}</span>
+            <div className="neural-related-list">
+              {modeProjects[mode].map(p => {
+                const isFeatured = p.title === CONTENT[lang].featured.project.title;
+                return (
+                  <a key={p.title} href={isFeatured ? '#featured' : '#projects'} className="neural-related-chip" onClick={() => !isFeatured && goToProject(p.title)}>
+                    {p.title.split(' — ')[0]}<span>↗</span>
+                  </a>
+                );
+              })}
+            </div>
+          </div>
+          <div className="panel-bottom"><span>{pt ? 'SELECIONE UM DOMÍNIO PARA EXPLORAR' : 'SELECT A DOMAIN TO EXPLORE'}</span><span>↗</span></div>
+        </div>
       </div>
-
-      {/* Profile photo — floating right on large screens */}
-      {heroVisible && (
-        <div style={{ position:'absolute', right:'clamp(40px,8vw,120px)', top:'50%', transform:'translateY(-50%)', opacity:0, animation:'fadeUp .7s .3s var(--ease) forwards', display:'none' }} className="show-lg">
-          <ProfilePhoto size={220} />
-        </div>
-      )}
-
-      {/* HUD labels */}
-      <div className="hud-lbl" style={{ position:'absolute', bottom:'32px', left:'24px', fontFamily:'var(--mono)', fontSize:'.6rem', color:'rgba(255,255,255,.15)', letterSpacing:'.22em' }}>{h.hudSignal}</div>
-      <div className="hud-lbl" style={{ position:'absolute', bottom:'32px', right:'24px', fontFamily:'var(--mono)', fontSize:'.6rem', color:'rgba(255,255,255,.15)', letterSpacing:'.22em' }}>{h.hudStatus}</div>
-
-      {/* Scroll indicator */}
-      {heroVisible && (
-        <div style={{ position:'absolute', bottom:'40px', left:'50%', transform:'translateX(-50%)', display:'flex', flexDirection:'column', alignItems:'center', gap:'8px', opacity:0, animation:'fadeUp .5s 1s var(--ease) forwards' }}>
-          <div style={{ width:'1px', height:'36px', background:'linear-gradient(to bottom,rgba(0,212,255,.45),transparent)', animation:'scrollBounce 1.7s ease-in-out infinite' }} />
-        </div>
-      )}
-
-      <style>{`
-        @media(min-width:900px){
-          .show-lg { display:block !important; }
-          #home > .c { padding-right: clamp(260px, 30vw, 380px); }
-        }
-      `}</style>
+      <div className="c hero-bottom"><span>PYTHON <i>/</i> PYTORCH <i>/</i> OPENCV <i>/</i> REACT <i>/</i> FASTAPI</span><a href="#featured">{pt ? 'CONTINUE EXPLORANDO' : 'SCROLL TO EXPLORE'} ↓</a></div>
     </section>
   );
 }

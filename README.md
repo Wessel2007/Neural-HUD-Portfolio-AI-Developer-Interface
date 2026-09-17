@@ -70,3 +70,14 @@ O deploy é feito no Vercel a partir da branch principal — o Vercel detecta o 
 - Animações decorativas (glitch, partículas, cursor customizado, scroll-reveal) são desativadas automaticamente quando o usuário tem `prefers-reduced-motion: reduce` ativado no sistema.
 - Idioma escolhido (EN/PT) é persistido via `localStorage` entre visitas.
 - Meta tags Open Graph/Twitter e dado estruturado JSON-LD usam a URL de produção (`https://wesselproject.vercel.app`) — se o domínio mudar, atualize as URLs em `index.html`, `public/robots.txt` e `public/sitemap.xml`.
+
+## Atualização visual v4
+
+- Abertura com tipografia ampliada, identidade verde menta e visualização neural CSS em três modos.
+- Catálogo com busca por nome/tecnologia, filtros por área, expansão de detalhes e carregamento de todos os projetos.
+- Visuais conceituais dos projetos, identificados como ilustrações, sem simular screenshots do produto.
+- Idioma inicial acompanha o navegador (PT/EN), preservando a preferência salva.
+- Layout responsivo, navegação por teclado e suporte a movimento reduzido.
+- Conteúdo, projetos, métricas e links originais preservados em `src/data.js`.
+
+Execute `npm ci` e `npm run dev` para revisar. `npm run build` gera a versão para deploy.

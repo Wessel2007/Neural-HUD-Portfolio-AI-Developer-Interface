@@ -22,7 +22,7 @@ function getInitialLang() {
   } catch (e) {
     // localStorage unavailable (private mode, etc.) — fall back to default
   }
-  return 'en';
+  return typeof navigator !== 'undefined' && navigator.language.startsWith('pt') ? 'pt' : 'en';
 }
 
 export default function App() {
@@ -54,15 +54,15 @@ export default function App() {
   return (
     <LangContext.Provider value={{ lang, toggle }}>
       <div style={{ opacity: fading ? 0.08 : 1, transition:'opacity .15s', background:'var(--bg)', minHeight:'100vh' }}>
-        <NavBar />
-        <HeroSection />
+        <a className="skip-link" href="#main-content">{lang === 'pt' ? 'Pular para conteúdo' : 'Skip to content'}</a><NavBar />
+        <main id="main-content"><HeroSection />
         <FeaturedProject />
         <ProjectsSection />
         <SkillsSection />
         <HackathonsSection />
         <AboutSection />
         <PublicationsSection />
-        <ContactSection />
+        <ContactSection /></main>
       </div>
     </LangContext.Provider>
   );

@@ -138,7 +138,7 @@ export function Particles(canvas) {
     for (let i = 0; i < pts.length; i++) {
       const p = pts[i];
       const dmx = p.x - mouse.x, dmy = p.y - mouse.y, dm = Math.sqrt(dmx * dmx + dmy * dmy);
-      if (dm < 90) { const f = (90 - dm) / 90; p.vx += dmx / dm * f * .28; p.vy += dmy / dm * f * .28; }
+      if (dm > 0 && dm < 90) { const f = (90 - dm) / 90; p.vx += dmx / dm * f * .28; p.vy += dmy / dm * f * .28; }
       const sp = Math.sqrt(p.vx * p.vx + p.vy * p.vy);
       if (sp > 1.4) { p.vx *= .92; p.vy *= .92; }
       p.x += p.vx; p.y += p.vy;
@@ -181,7 +181,7 @@ export function Particles(canvas) {
 /* ── 3-D card tilt ── */
 export function initTilt(el) {
   if (!el) return;
-  if (prefersReducedMotion()) return;
+  if (prefersReducedMotion() || !window.matchMedia('(pointer: fine)').matches) return;
   const onMove = (e) => {
     const r = el.getBoundingClientRect();
     const x = (e.clientX - r.left) / r.width - .5, y = (e.clientY - r.top) / r.height - .5;
@@ -194,4 +194,5 @@ export function initTilt(el) {
   };
   el.addEventListener('mousemove', onMove);
   el.addEventListener('mouseleave', onLeave);
+  return () => { el.removeEventListener('mousemove', onMove); el.removeEventListener('mouseleave', onLeave); };
 }
